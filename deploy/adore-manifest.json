@@ -1,0 +1,35 @@
+{
+  "build": {
+    "context": ".",
+    "dockerfile": "Containerfile",
+    "test_argv": [
+      "docker",
+      "build",
+      "--platform",
+      "linux/amd64",
+      "--target",
+      "test",
+      "-f",
+      "Containerfile",
+      "."
+    ]
+  },
+  "health": {
+    "path": "/healthz"
+  },
+  "hostname": "notlikeus.adorellc.pro",
+  "runtime": {
+    "cpu_shares": 256,
+    "memory_limit": "512m",
+    "port": 8080,
+    "startup_timeout_seconds": 120,
+    "tmpfs_limit": "64m"
+  },
+  "schema_version": 1,
+  "secrets": {
+    "required": []
+  },
+  "slug": "notlikeus",
+  "source_repo": "https://github.com/jtc268/not-like-us.git",
+  "state": "stateless"
+}
