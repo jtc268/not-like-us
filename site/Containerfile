@@ -4,7 +4,7 @@ FROM node:22.22.0-bookworm-slim AS build
 WORKDIR /app
 COPY site/package.json site/package-lock.json ./site/
 RUN cd site && npm ci
-COPY README.md AGENTS.md ./
+COPY README.md AGENTS.md llms.txt ./
 COPY manual ./manual
 COPY skills ./skills
 COPY stream ./stream
