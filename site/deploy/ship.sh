@@ -85,7 +85,13 @@ $N sudo 'bin/adore doctor --json > /tmp/doc.json' || { echo "platform doctor is 
 step "apply, commit, finalize"
 APPLY=$($N sudo "scripts/experiment-runtime.sh apply notlikeus $RELEASE < .staging/notlikeus/$RELEASE/candidate.tar.gz" 2>&1)
 TXID=$(printf '%s' "$APPLY" | node -e "let s='';process.stdin.on('data',d=>s+=d).on('end',()=>{const m=s.match(/\"txid\":\s*\"([^\"]+)\"/);console.log(m?m[1]:'')})")
-[ -n "$TXID" ] || { printf '%s\n' "$APPLY" | grep -vE '^\{"level"' | tail -15; exit 1; }
+[ -n "$TXID" ] || {
+  printf '%s\n' "$APPLY" | grep -vE '^\{"level"' | tail -15
+  echo "apply did not return a transaction. Last transaction state and any failing sibling experiments:"
+  $N sudo 'latest=$(ls -t deployments/notlikeus | head -1); jq -c .phase deployments/notlikeus/$latest/state.json 2>/dev/null; jq -c "[.experiments[]? | select(.ok != true) | .slug]" deployments/notlikeus/$latest/after-apply-doctor.json 2>/dev/null; ls deployments/.locks'
+  echo "If a sibling experiment was mid-deploy, wait for its lock to clear and run again; the staged candidate is reused."
+  exit 1
+}
 $N sudo "scripts/experiment-runtime.sh commit $TXID" | grep -q '"phase": "committed"'
 $N sudo "scripts/experiment-runtime.sh finalize $TXID" | grep -q '"phase": "finalized"'
 
