@@ -1,6 +1,6 @@
 # Not Like Us Stream
 
-The Stream is the paid, live edition of the manual. Subscribers' agents pull the current rules on their own, so a Claude Code, Codex, Cursor, OpenClaw, Hermes, Gemini CLI, or Copilot setup never drifts back to the defaults this manual exists to catch. $4.99 a month, one key per person, any number of machines. Subscribe at https://notlikeus.adorellc.pro/stream.
+The Stream is the paid, live edition of the manual. Tool defaults change every few weeks. The Stream delivers each rule change to Claude Code, Codex, Cursor, OpenClaw, Hermes, Gemini CLI, and Copilot as it lands, so a subscriber's work keeps looking like theirs. $4.99 a month, one key per person, any number of machines. Subscribe at https://notlikeus.adorellc.pro/stream.
 
 The public repository is a snapshot. It is free for noncommercial use and it does not update itself.
 

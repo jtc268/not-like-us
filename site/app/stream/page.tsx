@@ -60,15 +60,15 @@ export default async function Stream({ searchParams }: { searchParams: Promise<S
           05 / STREAM
         </div>
         <div className="hero-copy">
-          <p className="eyebrow">The live edition</p>
+          <p className="eyebrow">Live rules for AI-assisted work</p>
           <h1>
-            NEVER
+            THE
             <br />
-            DRIFT
+            STREAM
           </h1>
           <p className="deck">
-            Your agents pull the current Not Like Us rules on their own. New tells, new tool defaults, and corrected
-            guidance land in Claude Code, Codex, Cursor, OpenClaw, Hermes, Gemini CLI, and Copilot without a reinstall.
+            Tool defaults change every few weeks. The Stream delivers each rule change to Claude Code, Codex, Cursor,
+            OpenClaw, Hermes, Gemini CLI, and Copilot as it lands, so your work keeps looking like yours.
           </p>
           <StreamStatus />
         </div>
