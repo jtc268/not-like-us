@@ -19,7 +19,9 @@ ENV_FILE="${NLU_ENV:-$HOME/.config/not-like-us/notlikeus.env}"
 ENV_FILE_NATIVE=$(cygpath -w "$ENV_FILE" 2>/dev/null || echo "$ENV_FILE")
 [ -n "${NAS_PASSWORD:-}" ] || { echo "set NAS_PASSWORD"; exit 1; }
 # Only the NAS helper gets raw POSIX paths; everything else (curl -o, docker) keeps Git Bash path conversion.
-N="env MSYS_NO_PATHCONV=1 python $ROOT/site/deploy/nas.py"
+native() { cygpath -w "$1" 2>/dev/null || echo "$1"; }
+N="env MSYS_NO_PATHCONV=1 python $(native "$ROOT/site/deploy/nas.py")"
+nput() { $N put "$(native "$1")" "$2"; }
 D=/var/packages/ContainerManager/target/usr/bin/docker
 SHA=$(git rev-parse HEAD)
 RELEASE=${SHA:0:12}
@@ -65,7 +67,7 @@ echo "archive $ARCHIVE_SHA, $(ls "$OUT"/image.tar.gz.part-* | wc -l) chunks"
 step "upload to Meadowfire"
 $N sudo "scripts/experiment-runtime.sh artifact-stage notlikeus $RELEASE" >/dev/null
 $N run "mkdir -p .staging/notlikeus/$RELEASE && chmod 700 .staging/notlikeus/$RELEASE"
-for f in "$OUT"/image.tar.gz.part-* "$OUT/chunks.sha256"; do $N put "$f" "/volume7/docker/adore-fabric/.staging/artifacts/notlikeus/$RELEASE/$(basename "$f")" >/dev/null; done
+for f in "$OUT"/image.tar.gz.part-* "$OUT/chunks.sha256"; do nput "$f" "/volume7/docker/adore-fabric/.staging/artifacts/notlikeus/$RELEASE/$(basename "$f")" >/dev/null; done
 $N run "cd .staging/artifacts/notlikeus/$RELEASE && sha256sum -c chunks.sha256 >/dev/null && echo chunks verified"
 
 step "load with the id Meadowfire assigns"
@@ -77,7 +79,7 @@ echo "image id on Meadowfire $NAS_ID"
 step "candidate"
 node site/deploy/mkcandidate.mjs "$OUT" "$RELEASE" "$SHA" "$NAS_ID" "$ARCHIVE_SHA" "sha256:$(sha256sum "$OUT/build.log" | cut -d' ' -f1)" "sha256:$(sha256sum "$OUT/test.log" | cut -d' ' -f1)" >/dev/null
 (cd "$OUT" && rm -f candidate.tar.gz && tar -czf candidate.tar.gz -C candidate compose.yaml meadowfire.caddy metadata.json)
-for f in candidate.tar.gz build.log test.log; do $N put "$OUT/$f" "/volume7/docker/adore-fabric/.staging/notlikeus/$RELEASE/$f" >/dev/null; done
+for f in candidate.tar.gz build.log test.log; do nput "$OUT/$f" "/volume7/docker/adore-fabric/.staging/notlikeus/$RELEASE/$f" >/dev/null; done
 $N sudo 'bin/adore doctor --json > /tmp/doc.json' || { echo "platform doctor is red; see site/deploy/RUNBOOK.md (doctor.py expectations, stale lock)"; $N sudo 'jq -c "[.checks | to_entries[] | select(.value != true) | .key]" /tmp/doc.json'; exit 1; }
 
 step "apply, commit, finalize"
@@ -94,7 +96,7 @@ printf '%s' "$LIVE" | grep -q "\"$RELEASE\"" || exit 1
 
 step "operations log"
 printf '\n## %s | Not Like Us release %s\n\n- Actor: ship.sh for husky.\n- Source: https://github.com/jtc268/not-like-us commit %s.\n- Image %s, id on Meadowfire %s, transaction %s.\n- Verification: validate, image test stage, locked-down smoke (stream source, x402, subscribe), apply stages, public healthz.\n- Rollback: sudo /volume7/docker/adore-fabric/scripts/experiment-runtime.sh rollback %s\n' "$(date -u +%Y-%m-%dT%H:%M:%SZ)" "$RELEASE" "$SHA" "$IMAGE" "$NAS_ID" "$TXID" "$TXID" > "$OUT/ops-entry.md"
-$N put "$OUT/ops-entry.md" "/volume7/docker/adore-fabric/.staging/ops-entry-notlikeus.md" >/dev/null
+nput "$OUT/ops-entry.md" "/volume7/docker/adore-fabric/.staging/ops-entry-notlikeus.md" >/dev/null
 $N run 'cat .staging/ops-entry-notlikeus.md >> .staging/OPERATIONS_LOG.notlikeus.md && rm .staging/ops-entry-notlikeus.md'
 echo
 echo "shipped $RELEASE (transaction $TXID)"
