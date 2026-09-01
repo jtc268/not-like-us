@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Not Like Us compact instructions",
+  "type": "object",
+  "required": ["name", "version", "canonical", "instruction", "never", "prefer"],
+  "properties": {
+    "name": { "type": "string" },
+    "version": { "type": "string" },
+    "canonical": { "type": "string", "format": "uri" },
+    "instruction": { "type": "string" },
+    "never": { "type": "array", "items": { "type": "string" } },
+    "prefer": { "type": "array", "items": { "type": "string" } }
+  },
+  "additionalProperties": false
+}

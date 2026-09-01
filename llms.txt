@@ -1,0 +1,14 @@
+# Not Like Us
+> Cited rules for avoiding recognizable AI writing and interface defaults.
+
+Canonical: https://github.com/jtc268/not-like-us
+Quick instructions: /AGENTS.md
+Compact manifest: /not-like-us.json
+Writing rules: /rules/WRITING.md
+Design rules: /rules/DESIGN.md
+Per-tool guides: /tools/{tool}/WRITING.md and /tools/{tool}/DESIGN.md
+Sources: /data/sources.json
+Rule data: /data/rules.json
+
+Priority: local brand, voice, accessibility, and design-system requirements override this repository.
+Interpretation: recurring defaults are prompts to inspect, not proof that AI made an artifact.

@@ -1,0 +1,13 @@
+[
+  { "id": "lovable", "name": "Lovable", "note": "Multiple design directions, with a separate standard dashboard flow." },
+  { "id": "claude", "name": "Claude", "note": "Documented cream, serif, italic-accent, and terracotta house style." },
+  { "id": "codex", "name": "Codex", "note": "Explicit frontend guidance rejects common decorative and card-heavy defaults." },
+  { "id": "chatgpt", "name": "ChatGPT", "note": "Broad generation needs a narrow voice and visual brief." },
+  { "id": "v0", "name": "v0", "note": "shadcn/ui, Next.js, and Tailwind are documented defaults." },
+  { "id": "bolt", "name": "Bolt", "note": "Fast full-stack generation can spread early defaults through the build." },
+  { "id": "cursor", "name": "Cursor", "note": "Existing repository constraints are the best defense against visual drift." },
+  { "id": "replit", "name": "Replit", "note": "Design Mode starts front-end-only, then converts into an application." },
+  { "id": "base44", "name": "Base44", "note": "Themes and global AI design changes need careful scoping." },
+  { "id": "gemini", "name": "Gemini", "note": "Host-tool defaults and model choices need separate inspection." },
+  { "id": "gamma", "name": "Gamma", "note": "Auto-layout cards can shape the argument before the evidence does." }
+]

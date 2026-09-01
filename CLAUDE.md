@@ -1,0 +1,1 @@
+Read `AGENTS.md`, `rules/WRITING.md`, `rules/DESIGN.md`, `tools/claude/WRITING.md`, and `tools/claude/DESIGN.md`. Do not use Claude's documented cream, serif, italic-accent, and terracotta house style unless the local brand requires it.

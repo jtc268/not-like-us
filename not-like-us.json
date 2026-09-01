@@ -1,0 +1,23 @@
+{
+  "$schema": "./schema/compact.schema.json",
+  "name": "Not Like Us",
+  "version": "2026.09",
+  "canonical": "https://github.com/jtc268/not-like-us",
+  "instruction": "Make choices from the audience, task, real content, and local system. Avoid unearned generator defaults. Use rules/WRITING.md, rules/DESIGN.md, and the matching tools folder. Local project guidance wins.",
+  "never": [
+    "generic purple gradients or aurora blobs",
+    "Inter, Geist, glass panels, or rounded cards by reflex",
+    "centered hero plus three cards plus CTA page formulas",
+    "decorative pills, icon tiles, fake metrics, or fake testimonials",
+    "throat-clearing, binary contrast slogans, or vague consensus",
+    "rule-of-three filler, synonym cycling, recap endings, or em dashes",
+    "a claim that one visual or verbal tell proves AI authorship"
+  ],
+  "prefer": [
+    "domain-specific structure and actual workflows",
+    "real content, edge cases, empty states, and error states",
+    "deliberate typography, restrained color, and hierarchy before decoration",
+    "plain claims, concrete nouns, named sources, and varied sentence rhythm",
+    "human review against the portability test"
+  ]
+}

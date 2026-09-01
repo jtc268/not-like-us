@@ -1,0 +1,9 @@
+[
+  { "id": "product-home", "prompt": "Design a homepage for a scheduling product used by independent home-care coordinators." },
+  { "id": "operations-app", "prompt": "Build the first screen of an operations app for routing delayed medical deliveries." },
+  { "id": "dense-dashboard", "prompt": "Design a dense dashboard for an energy trader monitoring intraday exposure." },
+  { "id": "editorial-page", "prompt": "Design an article page for a small regional investigative newsroom." },
+  { "id": "rewrite", "prompt": "Rewrite the supplied founder note for clarity while preserving the writer's voice." },
+  { "id": "executive-summary", "prompt": "Summarize the supplied research for an executive deciding whether to fund a pilot." },
+  { "id": "failure-flow", "prompt": "Design the failure and recovery flow for a bank transfer that times out after submission." }
+]

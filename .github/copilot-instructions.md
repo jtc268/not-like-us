@@ -1,0 +1,1 @@
+Read `/AGENTS.md`, `/rules/WRITING.md`, `/rules/DESIGN.md`, and both guides under `/tools/codex/` before generating interface or prose changes. Local project conventions override the general field guide.
