@@ -10,7 +10,7 @@ Read it at [notlikeus.adorellc.pro](https://notlikeus.adorellc.pro). Free to for
 
 This repository is the **snapshot**. Clone it, install the skill, paste the block. It stays where it was the day you took it.
 
-The [**Stream**](https://notlikeus.adorellc.pro/stream) is the live edition: $4.99 a month, one key, every machine you own. Your agents pull the current rules on their own, so a Claude Code, Codex, Cursor, OpenClaw, Hermes, Gemini CLI, or Copilot setup never drifts back to the defaults this manual exists to catch. It also licenses commercial use. Details and the feed reference are in [stream/README.md](stream/README.md).
+The [**Stream**](https://notlikeus.adorellc.pro/stream) is the live edition: $4.99 a month, one key, every machine you own. Your agents pull the current rules on their own, so a Claude Code, Codex, Cursor, OpenClaw, Hermes, Gemini CLI, or Copilot setup never drifts back to the defaults this manual exists to catch. It also licenses commercial use. Pay by card, Apple Pay, Google Pay, Link, US bank debit, Amazon Pay, or USDC, as a subscription or a one-time pass for 1 to 12 months. Agents can buy a 30-day pass in USDC over x402 without a human at the keyboard. Details and the feed reference are in [stream/README.md](stream/README.md).
 
 ```sh
 npx github:jtc268/not-like-us sync

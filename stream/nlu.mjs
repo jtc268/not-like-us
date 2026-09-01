@@ -455,7 +455,14 @@ async function mcp() {
         const result = await fetchFeed({ key });
         if (result.feed) cache = { feed: result.feed, at: Date.now() };
       } catch (error) {
-        if (!cache) throw error;
+        // A lapsed or rotated key still gets the public snapshot, so the
+        // server keeps answering and the subscribe tool can explain how to renew.
+        try {
+          const fallback = await fetchFeed({ key: null });
+          if (fallback.feed) cache = { feed: fallback.feed, at: Date.now(), reason: error.message };
+        } catch (secondError) {
+          if (!cache) throw secondError;
+        }
       }
     }
     return cache.feed;
@@ -529,12 +536,30 @@ async function mcp() {
               },
             },
             { name: 'not_like_us_version', description: 'Version and freshness of the rules this server is serving.', inputSchema: { type: 'object', properties: {} } },
+            {
+              name: 'not_like_us_subscribe',
+              description: 'How to buy Stream access: a Stripe checkout link for a person (cards, wallets, bank debit, USDC), or the x402 endpoint where an agent pays $4.99 in USDC for a 30-day pass and receives a key. Returns instructions, never charges by itself.',
+              inputSchema: { type: 'object', properties: { method: { type: 'string', enum: ['stripe', 'x402', 'any'], description: 'Preferred way to pay' } } },
+            },
           ],
         });
       } else if (method === 'tools/call') {
         const feed = await current();
         if (params.name === 'not_like_us_version') {
           reply(id, { content: [{ type: 'text', text: `Not Like Us ${feed.source} ${feed.version}, updated ${feed.updated_at}, ${feed.rule_count} rules.` }] });
+        } else if (params.name === 'not_like_us_subscribe') {
+          const method = params.arguments?.method ?? 'any';
+          const lines = [
+            `Not Like Us Stream: $4.99 for 30 days of live rules. Current key: ${key ? 'saved' : 'none'}. Serving: ${feed.source} ${feed.version}.`,
+          ];
+          if (cache?.reason) lines.push(`The saved key was rejected: ${cache.reason}`);
+          if (method !== 'x402') {
+            lines.push(`Person at a keyboard: open ${SITE}/stream. Subscribe (monthly, cancel any time) or Pay once (1 to 12 months, no renewal). Cards, Apple Pay, Google Pay, Link, US bank debit, Amazon Pay, USDC where enabled. The welcome page shows the key; then run: nlu login <key> && nlu sync.`);
+          }
+          if (method !== 'stripe') {
+            lines.push(`Agent with a USDC wallet: GET ${SITE}/v1/x402/pass returns HTTP 402 with x402 payment requirements (USDC on Base). Pay with any x402 client, for example x402-fetch, and the response is JSON with a key and an expiry. Then run: nlu login <key> && nlu sync. Discovery: ${SITE}/.well-known/x402`);
+          }
+          reply(id, { content: [{ type: 'text', text: lines.join('\n\n') }] });
         } else if (params.name === 'not_like_us_rules') {
           const parts = [feed.files[SKILL]];
           const tool = params.arguments?.tool;

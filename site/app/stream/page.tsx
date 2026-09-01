@@ -10,9 +10,39 @@ const repo = 'https://github.com/jtc268/not-like-us';
 export default async function Stream({ searchParams }: { searchParams: Promise<Search> | Search }) {
   const params = await searchParams;
   const recovered = params.recovered === '1';
+  const offer = {
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    name: 'Not Like Us Stream',
+    description: 'Live rules feed for AI writing and interface work. Agents pull the current Not Like Us rules automatically.',
+    brand: { '@type': 'Organization', name: 'Adore LLC' },
+    url: `${SITE}/stream`,
+    offers: [
+      {
+        '@type': 'Offer',
+        name: 'Stream subscription',
+        price: '4.99',
+        priceCurrency: 'USD',
+        priceSpecification: { '@type': 'UnitPriceSpecification', price: '4.99', priceCurrency: 'USD', billingDuration: 1, billingIncrement: 1, unitCode: 'MON' },
+        availability: 'https://schema.org/InStock',
+        url: `${SITE}/v1/checkout`,
+        acceptedPaymentMethod: ['http://purl.org/goodrelations/v1#PaymentMethodCreditCard', 'http://purl.org/goodrelations/v1#DirectDebit', 'http://purl.org/goodrelations/v1#ByBankTransferInAdvance'],
+      },
+      {
+        '@type': 'Offer',
+        name: '30-day pass, prepaid, no renewal',
+        price: '4.99',
+        priceCurrency: 'USD',
+        availability: 'https://schema.org/InStock',
+        url: `${SITE}/v1/pass`,
+        acceptedPaymentMethod: ['http://purl.org/goodrelations/v1#PaymentMethodCreditCard', 'http://purl.org/goodrelations/v1#DirectDebit', 'https://x402.org', 'USDC'],
+      },
+    ],
+  };
 
   return (
     <main>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(offer) }} />
       <header className="topbar">
         <Link className="wordmark" href="/" aria-label="Not Like Us home">
           NLU<span>↗</span>
@@ -51,6 +81,16 @@ export default async function Stream({ searchParams }: { searchParams: Promise<S
               Subscribe with Stripe
             </button>
           </form>
+          <form method="post" action="/v1/pass">
+            <button type="submit" className="button secondary">
+              Pay once, no renewal
+            </button>
+          </form>
+          <p className="fine">
+            Cards, Apple Pay, Google Pay, Link, US bank debit, Amazon Pay, and whatever else Stripe offers your
+            country, including USDC where it is enabled. Pay once covers 1 to 12 months at the same price. Agents can pay
+            in USDC over x402.
+          </p>
         </aside>
       </section>
 
@@ -191,9 +231,25 @@ export default async function Stream({ searchParams }: { searchParams: Promise<S
         />
       </section>
 
-      <section className="quick" aria-labelledby="free-title">
+      <section className="quick" aria-labelledby="x402-title">
         <div className="section-label">
           <span>06</span>
+          <h2 id="x402-title">Agents pay by themselves</h2>
+          <p>
+            An agent with a USDC wallet does not need you at the keyboard. The pass endpoint answers 402 with x402
+            requirements; any x402 client pays and gets a key back. Paying again from the same wallet extends the same
+            key. Machine-readable details at <code>/agents</code>, <code>/openapi.json</code>, and{' '}
+            <code>/.well-known/x402</code>.
+          </p>
+        </div>
+        <CopyBlock
+          value={`# 1. Ask for the price (HTTP 402, x402 v2, USDC on Base, Polygon, or Arbitrum)\ncurl -i ${SITE}/v1/x402/pass\n\n# 2. Pay with any x402 client, for example @x402/fetch, and read the key from the JSON\n#    { "key": "nlu_...", "until": "...", "days": 30 }\n\n# 3. Use it\nnpx github:jtc268/not-like-us login nlu_... && npx github:jtc268/not-like-us sync`}
+        />
+      </section>
+
+      <section className="quick" aria-labelledby="free-title">
+        <div className="section-label">
+          <span>07</span>
           <h2 id="free-title">Try it free first</h2>
           <p>Every command works without a key. It installs the public snapshot and tells you how far behind the stream it is.</p>
         </div>
@@ -202,7 +258,7 @@ export default async function Stream({ searchParams }: { searchParams: Promise<S
 
       <section className="method" id="manage">
         <div className="section-label">
-          <span>07</span>
+          <span>08</span>
           <h2>Billing and keys</h2>
           <p>
             {recovered
@@ -229,7 +285,7 @@ export default async function Stream({ searchParams }: { searchParams: Promise<S
 
       <section className="method" id="terms">
         <div className="section-label">
-          <span>08</span>
+          <span>09</span>
           <h2>Terms</h2>
           <p>Plain language. The Stripe receipt and the billing portal are the record.</p>
         </div>
@@ -242,6 +298,11 @@ export default async function Stream({ searchParams }: { searchParams: Promise<S
             <b>Billing.</b> {PRICE_LABEL}, charged by Stripe on the day you subscribe and monthly after that. Cancel from
             the billing portal. Access continues to the end of the paid month. Refunds within seven days of a charge on
             request to stream@adorellc.pro.
+          </p>
+          <p>
+            <b>Pay once.</b> A prepaid pass is $4.99 per 30 days for 1 to 12 months, paid once through any method Stripe
+            offers, including USDC where enabled. It does not renew. Agents can buy a 30-day pass in USDC over x402.
+            Prepaid passes are refundable within seven days if the key has not been used.
           </p>
           <p>
             <b>License.</b> The public repository is licensed under PolyForm Noncommercial 1.0.0. An active subscription

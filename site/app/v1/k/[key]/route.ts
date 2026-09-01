@@ -1,4 +1,4 @@
-import { authorize, errorResponse, feed, json } from '../../../../lib/stream';
+import { authorize, buyHints, errorResponse, feed, json, PAYMENT_LINK } from '../../../../lib/stream';
 
 type Context = { params: Promise<{ key: string }> | { key: string } };
 
@@ -7,7 +7,7 @@ export async function GET(_request: Request, context: Context) {
   try {
     const { key } = await context.params;
     const verdict = await authorize(key);
-    if (!verdict.ok) return json({ error: verdict.message }, verdict.status);
+    if (!verdict.ok) return json({ error: verdict.message, buy: buyHints() }, verdict.status, PAYMENT_LINK);
     return json(await feed());
   } catch (error) {
     return errorResponse(error);

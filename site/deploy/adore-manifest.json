@@ -35,7 +35,9 @@
       "RESEND_API_KEY",
       "NLU_FROM_EMAIL",
       "NLU_SOURCE_REPO",
-      "NLU_SOURCE_TOKEN"
+      "NLU_SOURCE_TOKEN",
+      "STRIPE_PASS_PRICE_ID",
+      "NLU_X402_PAY_TO"
     ]
   },
   "slug": "notlikeus",

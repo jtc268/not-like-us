@@ -1,4 +1,4 @@
-import { authorize, contentTypeFor, errorResponse, feed, json, text } from '../../../../../lib/stream';
+import { authorize, buyHints, contentTypeFor, errorResponse, feed, json, PAYMENT_LINK, text } from '../../../../../lib/stream';
 
 type Context = { params: Promise<{ key: string; path: string[] }> | { key: string; path: string[] } };
 
@@ -12,7 +12,7 @@ export async function GET(_request: Request, context: Context) {
   try {
     const { key, path } = await context.params;
     const verdict = await authorize(key);
-    if (!verdict.ok) return json({ error: verdict.message }, verdict.status);
+    if (!verdict.ok) return json({ error: verdict.message, buy: buyHints() }, verdict.status, PAYMENT_LINK);
     const current = await feed();
     const wanted = path.join('/');
     const aliases: Record<string, string> = {

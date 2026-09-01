@@ -124,7 +124,14 @@ async function stripe(path: string, options: { method?: string; body?: Record<st
   return data;
 }
 
-type Subscription = { id: string; status: string; current_period_end?: number; cancel_at_period_end?: boolean };
+type Subscription = {
+  id: string;
+  status: string;
+  current_period_end?: number;
+  cancel_at_period_end?: boolean;
+  trial_end?: number | null;
+  metadata?: Record<string, string>;
+};
 
 export type Standing = {
   ok: boolean;
@@ -164,9 +171,65 @@ export async function setCustomerMetadata(customerId: string, values: Record<str
   await stripe(`/v1/customers/${customerId}`, { body });
 }
 
+// Payment methods are chosen from the account's active capabilities at
+// request time, so a method switched on in the Dashboard (Cash App, PayPal,
+// USDC stablecoins, Klarna) appears at checkout without a deploy. Each list
+// holds USD methods that Stripe accepts for that mode. If Stripe rejects the
+// explicit list, the session is retried with Stripe's own dynamic selection.
+const RECURRING_METHODS: Record<string, string> = {
+  card: 'card_payments',
+  link: 'link_payments',
+  us_bank_account: 'us_bank_account_ach_payments',
+  amazon_pay: 'amazon_pay_payments',
+  cashapp: 'cashapp_payments',
+  paypal: 'paypal_payments',
+};
+const ONE_TIME_METHODS: Record<string, string> = {
+  ...RECURRING_METHODS,
+  crypto: 'crypto_payments',
+  afterpay_clearpay: 'afterpay_clearpay_payments',
+  klarna: 'klarna_payments',
+  affirm: 'affirm_payments',
+};
+
+let capabilityCache: { active: Set<string>; until: number } | null = null;
+
+export async function activeCapabilities(): Promise<Set<string>> {
+  if (capabilityCache && capabilityCache.until > Date.now()) return capabilityCache.active;
+  const account = await stripe('/v1/account');
+  const capabilities = (account.capabilities as Record<string, string> | undefined) ?? {};
+  const active = new Set(Object.entries(capabilities).filter(([, state]) => state === 'active').map(([name]) => name));
+  capabilityCache = { active, until: Date.now() + 10 * 60 * 1000 };
+  return active;
+}
+
+export async function paymentMethods(mode: 'subscription' | 'payment'): Promise<string[]> {
+  const active = await activeCapabilities();
+  const table = mode === 'subscription' ? RECURRING_METHODS : ONE_TIME_METHODS;
+  return Object.entries(table)
+    .filter(([, capability]) => active.has(capability))
+    .map(([method]) => method);
+}
+
+async function createCheckout(body: Record<string, string>, mode: 'subscription' | 'payment'): Promise<string> {
+  const methods = await paymentMethods(mode);
+  const explicit: Record<string, string> = { ...body };
+  methods.forEach((method, index) => {
+    explicit[`payment_method_types[${index}]`] = method;
+  });
+  try {
+    const session = await stripe('/v1/checkout/sessions', { body: explicit });
+    return session.url as string;
+  } catch (error) {
+    console.error('explicit payment methods rejected, using dynamic selection', error);
+    const session = await stripe('/v1/checkout/sessions', { body });
+    return session.url as string;
+  }
+}
+
 export async function checkoutUrl(origin: string): Promise<string> {
-  const session = await stripe('/v1/checkout/sessions', {
-    body: {
+  return createCheckout(
+    {
       mode: 'subscription',
       'line_items[0][price]': env('STRIPE_PRICE_ID'),
       'line_items[0][quantity]': '1',
@@ -177,19 +240,102 @@ export async function checkoutUrl(origin: string): Promise<string> {
       'subscription_data[metadata][product]': PRODUCT,
       'metadata[product]': PRODUCT,
     },
-  });
-  return session.url as string;
+    'subscription',
+  );
 }
 
-export async function checkoutSession(sessionId: string): Promise<{ customerId: string | null; email: string | null; paid: boolean }> {
+export type CheckoutResult = {
+  customerId: string | null;
+  email: string | null;
+  paid: boolean;
+  mode: 'subscription' | 'payment';
+  months: number;
+  paymentIntentId: string | null;
+  granted: boolean;
+};
+
+export async function checkoutSession(sessionId: string): Promise<CheckoutResult> {
   if (!/^cs_(live|test)_[A-Za-z0-9]+$/.test(sessionId)) throw new StreamError(400, 'That checkout session id is not valid.');
   const session = await stripe(`/v1/checkout/sessions/${sessionId}`);
   const details = session.customer_details as { email?: string } | undefined;
+  const mode = session.mode === 'payment' ? 'payment' : 'subscription';
+  let months = 0;
+  let granted = false;
+  const paymentIntentId = (session.payment_intent as string | null) ?? null;
+  if (mode === 'payment') {
+    const items = await stripe(`/v1/checkout/sessions/${sessionId}/line_items?limit=5`);
+    months = ((items.data as { quantity?: number }[] | undefined) ?? []).reduce((sum, item) => sum + (item.quantity ?? 0), 0) || 1;
+    if (paymentIntentId) {
+      const intent = await stripe(`/v1/payment_intents/${paymentIntentId}`);
+      granted = Boolean(((intent.metadata as Record<string, string> | undefined) ?? {}).nlu_granted);
+    }
+  }
   return {
     customerId: (session.customer as string | null) ?? null,
     email: details?.email ?? null,
     paid: session.status === 'complete' && (session.payment_status === 'paid' || session.payment_status === 'no_payment_required'),
+    mode,
+    months,
+    paymentIntentId,
+    granted,
   };
+}
+
+// A prepaid pass: one payment for N months, any payment method Stripe offers
+// for one-time payments (cards, wallets, Link, bank debits, Cash App, PayPal,
+// USDC stablecoins when enabled). Quantity is the number of 30-day periods.
+export async function passCheckoutUrl(origin: string): Promise<string> {
+  return createCheckout(
+    {
+      mode: 'payment',
+      'line_items[0][price]': env('STRIPE_PASS_PRICE_ID'),
+      'line_items[0][quantity]': '1',
+      'line_items[0][adjustable_quantity][enabled]': 'true',
+      'line_items[0][adjustable_quantity][minimum]': '1',
+      'line_items[0][adjustable_quantity][maximum]': '12',
+      customer_creation: 'always',
+      success_url: `${origin}/welcome?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${origin}/stream`,
+      allow_promotion_codes: 'true',
+      billing_address_collection: 'auto',
+      'metadata[product]': PRODUCT,
+      'metadata[kind]': 'pass30',
+      'payment_intent_data[metadata][product]': PRODUCT,
+      'payment_intent_data[metadata][kind]': 'pass30',
+    },
+    'payment',
+  );
+}
+
+// Turns a prepaid purchase into access: a trialing subscription with no card
+// that ends by itself, so the same key check covers every payment rail. If a
+// prepaid subscription is already running, its end date moves out instead.
+export async function grantDays(customerId: string, days: number, note: Record<string, string> = {}): Promise<{ until: string }> {
+  const list = await stripe(`/v1/subscriptions?customer=${customerId}&status=all&limit=10`);
+  const subscriptions = (list.data as Subscription[] | undefined) ?? [];
+  const current = subscriptions.find((item) => item.status === 'trialing' && item.metadata?.nlu_prepaid === '1');
+  const now = Math.floor(Date.now() / 1000);
+  const base = current?.trial_end && current.trial_end > now ? current.trial_end : now;
+  const trialEnd = base + days * 86400;
+  if (current) {
+    await stripe(`/v1/subscriptions/${current.id}`, { body: { trial_end: String(trialEnd), proration_behavior: 'none' } });
+  } else {
+    const body: Record<string, string> = {
+      customer: customerId,
+      'items[0][price]': env('STRIPE_PRICE_ID'),
+      trial_end: String(trialEnd),
+      'trial_settings[end_behavior][missing_payment_method]': 'cancel',
+      'metadata[nlu_prepaid]': '1',
+      'metadata[product]': PRODUCT,
+    };
+    for (const [key, value] of Object.entries(note)) body[`metadata[${key}]`] = value;
+    await stripe('/v1/subscriptions', { body });
+  }
+  return { until: new Date(trialEnd * 1000).toISOString() };
+}
+
+export async function markGranted(paymentIntentId: string, until: string): Promise<void> {
+  await stripe(`/v1/payment_intents/${paymentIntentId}`, { body: { 'metadata[nlu_granted]': until } });
 }
 
 export async function portalUrl(customerId: string, origin: string): Promise<string> {
@@ -202,6 +348,31 @@ export async function portalUrl(customerId: string, origin: string): Promise<str
   });
   return session.url as string;
 }
+
+// One Stripe customer per paying wallet, so a wallet that pays again keeps the
+// same key and simply extends it.
+export async function customerForPayer(payer: string, network: string): Promise<string> {
+  const query = encodeURIComponent(`metadata['nlu_x402_payer']:'${payer}'`);
+  const search = await stripe(`/v1/customers/search?query=${query}&limit=1`);
+  const found = ((search.data as { id: string }[] | undefined) ?? [])[0];
+  if (found) return found.id;
+  const created = await stripe('/v1/customers', {
+    body: {
+      name: `x402 wallet ${payer.slice(0, 10)}`,
+      description: `Not Like Us Stream, paid by wallet ${payer} on ${network}`,
+      'metadata[nlu_x402_payer]': payer,
+      'metadata[nlu_x402_network]': network,
+      'metadata[product]': PRODUCT,
+    },
+  });
+  return created.id as string;
+}
+
+export function buyHints() {
+  return { subscribe: `${SITE}/stream`, checkout: `${SITE}/v1/checkout`, pass: `${SITE}/v1/pass`, x402: `${SITE}/v1/x402/pass` };
+}
+
+export const PAYMENT_LINK = { link: `<${SITE}/v1/x402/pass>; rel="payment"` };
 
 export async function customersByEmail(email: string): Promise<string[]> {
   const list = await stripe(`/v1/customers?email=${encodeURIComponent(email)}&limit=10`);

@@ -7,6 +7,9 @@ Stream (paid, live edition): https://notlikeus.adorellc.pro/stream
 Stream feed reference: /stream/README.md
 Public feed version: https://notlikeus.adorellc.pro/v1/version
 Public snapshot feed: https://notlikeus.adorellc.pro/v1/snapshot
+Buy access (person): POST https://notlikeus.adorellc.pro/v1/checkout (subscription, USD 4.99/month) or POST /v1/pass (one payment, 1 to 12 months). Stripe: cards, Apple Pay, Google Pay, Link, US bank debit, Amazon Pay, USDC where enabled.
+Buy access (agent, x402): GET https://notlikeus.adorellc.pro/v1/x402/pass answers 402 with x402 requirements; pay USDC on Base, receive a key for 30 days. Discovery: /.well-known/x402
+Use a key: Authorization: Bearer nlu_... on /v1/feed, or /v1/k/<key>/SKILL.md
 Skill: /skills/not-like-us/SKILL.md
 Paste block: /manual/prompt.txt
 Agent instructions: /AGENTS.md

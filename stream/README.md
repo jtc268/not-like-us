@@ -4,6 +4,25 @@ The Stream is the paid, live edition of the manual. Subscribers' agents pull the
 
 The public repository is a snapshot. It is free for noncommercial use and it does not update itself.
 
+## Paying
+
+- **Subscribe** at `POST /v1/checkout`: $4.99 a month through Stripe Checkout, cancel any time from the billing portal.
+- **Pay once** at `POST /v1/pass`: $4.99 per 30 days for 1 to 12 months in one payment. No renewal. The pass is a trialing subscription with no card on file, so the same key check covers it and it ends by itself.
+- **Methods.** Checkout offers every method the Stripe account has active for the mode: cards with Apple Pay and Google Pay, Link, US bank debit, Amazon Pay, and for one-time passes Afterpay. Cash App, PayPal, Klarna, and USDC stablecoins appear the moment they are switched on in the Stripe Dashboard; the server reads the account's capabilities at request time, so no deploy is needed.
+- **Agents** pay in USDC over x402: see the x402 section below.
+
+## x402: agents pay by themselves
+
+`GET https://notlikeus.adorellc.pro/v1/x402/pass` answers HTTP 402. The `PAYMENT-REQUIRED` header (and the body) carry x402 v2 requirements: scheme `exact`, amount `4990000` (USD 4.99 in USDC, six decimals), on Base `eip155:8453`, Polygon `eip155:137`, and Arbitrum One `eip155:42161`, paid to the Stream's wallet. An x402 client signs an EIP-3009 authorization and retries with `PAYMENT-SIGNATURE`. The server verifies and settles through a facilitator (PayAI by default, keyless; set `NLU_X402_FACILITATOR` to switch, for example to Coinbase's CDP facilitator for Bazaar indexing), then answers 200 with `{ key, until, days, feed }` and a `PAYMENT-RESPONSE` header.
+
+Each paying wallet maps to one Stripe customer, and the pass is a 30-day trialing subscription with no card, so the key check is the same as for every other rail. Paying again from the same wallet before the expiry extends the same key by 30 days.
+
+Clients that do this out of the box: `@x402/fetch` (`wrapFetchWithPayment`), Coinbase AgentKit's `make_http_request_with_x402`, the Coinbase Agentic Wallet MCP (`npx @coinbase/payments-mcp`, works in Claude Code, Codex CLI, Gemini CLI), and PayAI. The MCP server's `not_like_us_subscribe` tool explains the same flow to any agent that asks.
+
+Discovery for agents: `/agents` (plain page), `/llms.txt`, `/openapi.json` with `x-payment-info.offers`, `/.well-known/x402` (seller manifest), `/acp/products.csv` (OpenAI ACP feed, discovery only), and `robots.txt` that admits GPTBot, ClaudeBot, OAI-SearchBot, PerplexityBot, and Google-Extended. Keyless requests to `/v1/feed` return the buy links in the body and a `Link: rel="payment"` header.
+
+Not done yet, each needs a Dashboard or account step: Stripe stablecoins (request Stablecoins and Crypto in the Stripe Dashboard; then USDC appears at Stripe Checkout automatically), Stripe MPP challenges and Stripe Directory (need a Stripe public profile), Coinbase Bazaar indexing (needs a CDP API key on the facilitator), Solana USDC (needs a Solana receiving address).
+
 ## How it works
 
 - The live rules live in a private repository. Every commit to it is a new stream version within a minute.

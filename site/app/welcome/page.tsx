@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import CopyBlock from '../../components/copy-block';
-import { checkoutSession, customer, makeKey, sendKeyEmail, setCustomerMetadata, SITE } from '../../lib/stream';
+import { checkoutSession, customer, grantDays, makeKey, markGranted, sendKeyEmail, setCustomerMetadata, SITE } from '../../lib/stream';
 
 type Search = Record<string, string | string[] | undefined>;
 
@@ -13,12 +13,18 @@ export default async function Welcome({ searchParams }: { searchParams: Promise<
   let email: string | null = null;
   let emailed = false;
   let error = '';
+  let passUntil = '';
 
   try {
     if (!sessionId) throw new Error('This page needs the session id that Stripe adds after checkout.');
     const session = await checkoutSession(sessionId);
     if (!session.customerId || !session.paid) {
       throw new Error('Checkout did not complete. If your card was charged, email stream@adorellc.pro with the time of purchase.');
+    }
+    if (session.mode === 'payment' && !session.granted) {
+      const grant = await grantDays(session.customerId, 30 * session.months, { nlu_pass_months: String(session.months) });
+      passUntil = grant.until;
+      if (session.paymentIntentId) await markGranted(session.paymentIntentId, grant.until);
     }
     const account = await customer(session.customerId);
     key = await makeKey(session.customerId, account.keyVersion);
@@ -66,6 +72,7 @@ export default async function Welcome({ searchParams }: { searchParams: Promise<
               <h2 id="welcome-title">Your Stream key</h2>
               <p>
                 {emailed && email ? `A copy is in your inbox at ${email}. ` : ''}
+                {passUntil ? `Your prepaid pass runs until ${passUntil.slice(0, 10)} and does not renew. ` : ''}
                 Keep it private. It is the only login, and it works on every machine you own.
               </p>
             </div>

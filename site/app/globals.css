@@ -223,3 +223,7 @@ pre { margin: 0; padding: clamp(4.5rem, 5vw, 5rem) clamp(2rem, 5vw, 5rem); overf
   .inline-form { grid-template-columns: 1fr; }
   .stream-status div { grid-template-columns: 1fr; gap: .2rem; }
 }
+.hero-note .button.secondary { background: transparent; color: var(--ink); }
+.hero-note .button.secondary:hover, .hero-note .button.secondary:focus-visible { background: var(--ink); color: var(--acid); }
+.hero-note form + form { margin-top: .6rem; }
+.hero-note .fine { margin-top: 1.2rem; font-size: .68rem; line-height: 1.55; color: var(--ink); opacity: .8; }
