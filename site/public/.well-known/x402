@@ -1,0 +1,30 @@
+{
+  "x402Version": 2,
+  "kind": "seller",
+  "name": "Not Like Us Stream",
+  "site": "https://notlikeus.adorellc.pro",
+  "manifest": "https://notlikeus.adorellc.pro/x402.json",
+  "facilitator": {
+    "baseUrl": "https://facilitator.payai.network",
+    "endpoints": { "verify": "/verify", "settle": "/settle", "supported": "/supported" }
+  },
+  "resources": [
+    {
+      "url": "https://notlikeus.adorellc.pro/v1/x402/pass",
+      "method": "GET",
+      "description": "30-day key for the live rules feed. Pay USD 4.99 in USDC; the response is JSON with the key.",
+      "accepts": [
+        { "scheme": "exact", "network": "eip155:8453", "amount": "4990000", "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913", "payTo": "0x8Cf14C00DdFa82Ca37A461472fBd65d5f6d476C0", "maxTimeoutSeconds": 300, "extra": { "name": "USD Coin", "version": "2" } },
+        { "scheme": "exact", "network": "eip155:137", "amount": "4990000", "asset": "0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359", "payTo": "0x8Cf14C00DdFa82Ca37A461472fBd65d5f6d476C0", "maxTimeoutSeconds": 300, "extra": { "name": "USD Coin", "version": "2" } },
+        { "scheme": "exact", "network": "eip155:42161", "amount": "4990000", "asset": "0xaf88d065e77c8cC2239327C5EDb3A432268e5831", "payTo": "0x8Cf14C00DdFa82Ca37A461472fBd65d5f6d476C0", "maxTimeoutSeconds": 300, "extra": { "name": "USD Coin", "version": "2" } }
+      ],
+      "output": { "type": "json", "example": { "key": "nlu_...", "until": "2026-10-01T00:00:00.000Z", "days": 30 } }
+    }
+  ],
+  "also": {
+    "llms": "https://notlikeus.adorellc.pro/llms.txt",
+    "openapi": "https://notlikeus.adorellc.pro/openapi.json",
+    "agents": "https://notlikeus.adorellc.pro/agents",
+    "humans": "https://notlikeus.adorellc.pro/stream"
+  }
+}

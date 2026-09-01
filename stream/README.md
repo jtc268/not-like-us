@@ -19,7 +19,7 @@ Each paying wallet maps to one Stripe customer, and the pass is a 30-day trialin
 
 Clients that do this out of the box: `@x402/fetch` (`wrapFetchWithPayment`), Coinbase AgentKit's `make_http_request_with_x402`, the Coinbase Agentic Wallet MCP (`npx @coinbase/payments-mcp`, works in Claude Code, Codex CLI, Gemini CLI), and PayAI. The MCP server's `not_like_us_subscribe` tool explains the same flow to any agent that asks.
 
-Discovery for agents: `/agents` (plain page), `/llms.txt`, `/openapi.json` with `x-payment-info.offers`, `/.well-known/x402` (seller manifest), `/acp/products.csv` (OpenAI ACP feed, discovery only), and `robots.txt` that admits GPTBot, ClaudeBot, OAI-SearchBot, PerplexityBot, and Google-Extended. Keyless requests to `/v1/feed` return the buy links in the body and a `Link: rel="payment"` header.
+Discovery for agents: `/agents` (plain page), `/llms.txt`, `/openapi.json` with `x-payment-info.offers`, `/.well-known/x402` and `/x402.json` (seller manifest; the well-known copy is a static file in `site/public/.well-known/x402` and must be updated by hand if the wallet or facilitator changes), `/acp/products.csv` (OpenAI ACP feed, discovery only), and `robots.txt` that admits GPTBot, ClaudeBot, OAI-SearchBot, PerplexityBot, and Google-Extended. Keyless requests to `/v1/feed` return the buy links in the body and a `Link: rel="payment"` header.
 
 Not done yet, each needs a Dashboard or account step: Stripe stablecoins (request Stablecoins and Crypto in the Stripe Dashboard; then USDC appears at Stripe Checkout automatically), Stripe MPP challenges and Stripe Directory (need a Stripe public profile), Coinbase Bazaar indexing (needs a CDP API key on the facilitator), Solana USDC (needs a Solana receiving address).
 
