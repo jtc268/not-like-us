@@ -4,9 +4,10 @@ FROM node:22.22.0-bookworm-slim AS build
 WORKDIR /app
 COPY site/package.json site/package-lock.json ./site/
 RUN cd site && npm ci
-COPY README.md ./
+COPY README.md AGENTS.md ./
 COPY manual ./manual
 COPY skills ./skills
+COPY stream ./stream
 COPY site ./site
 RUN node manual/scripts/validate.mjs && cd site && npm run lint && npm run build
 
@@ -36,4 +37,6 @@ RUN ln -s /tmp/miniflare /app/node_modules/.mf \
 USER 10001:10001
 EXPOSE 8080
 HEALTHCHECK --interval=20s --timeout=5s --start-period=15s --retries=3 CMD ["node", "-e", "fetch('http://127.0.0.1:8080/healthz').then(r=>r.json()).then(x=>{if(x.status!=='ok')process.exit(1)}).catch(()=>process.exit(1))"]
-CMD ["sh", "-c", "mkdir -p /tmp/miniflare /tmp/wrangler && exec ./node_modules/.bin/wrangler dev --ip 0.0.0.0 --port 8080 --config dist/server/wrangler.json --var ADORE_RELEASE:${ADORE_RELEASE} --show-interactive-dev-session=false"]
+# Secrets arrive as container environment from the Adore Fabric env_file and are
+# handed to the worker as vars.
+CMD ["sh", "-c", "mkdir -p /tmp/miniflare /tmp/wrangler && exec ./node_modules/.bin/wrangler dev --ip 0.0.0.0 --port 8080 --config dist/server/wrangler.json --var ADORE_RELEASE:${ADORE_RELEASE} --var STRIPE_SECRET_KEY:${STRIPE_SECRET_KEY} --var STRIPE_PRICE_ID:${STRIPE_PRICE_ID} --var STRIPE_PORTAL_CONFIG_ID:${STRIPE_PORTAL_CONFIG_ID} --var NLU_KEY_SECRET:${NLU_KEY_SECRET} --var RESEND_API_KEY:${RESEND_API_KEY} --var NLU_FROM_EMAIL:${NLU_FROM_EMAIL} --var NLU_SOURCE_REPO:${NLU_SOURCE_REPO} --var NLU_SOURCE_TOKEN:${NLU_SOURCE_TOKEN} --show-interactive-dev-session=false"]

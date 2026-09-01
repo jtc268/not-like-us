@@ -2,8 +2,11 @@ import rules from '../../manual/data/rules.json';
 import sources from '../../manual/data/sources.json';
 import toolData from '../../manual/data/tools.json';
 import quickRules from '../../manual/prompt.txt?raw';
+import Link from 'next/link';
 import CopyBlock from '../components/copy-block';
 import RuleExplorer from '../components/rule-explorer';
+import StreamStatus from '../components/stream-status';
+import { PRICE_LABEL } from '../lib/stream';
 
 const repo = 'https://github.com/jtc268/not-like-us';
 const typeOrder = ['official', 'research', 'repository', 'community'];
@@ -19,7 +22,7 @@ export default function Home() {
         <nav aria-label="Primary navigation">
           <a href="#rules">Rules</a>
           <a href="#tools">Tools</a>
-          <a href="#method">Sources</a>
+          <Link href="/stream">Stream</Link>
           <a href={repo}>GitHub</a>
         </nav>
       </header>
@@ -88,9 +91,32 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="method" id="method">
+      <section className="quick stream" id="stream" aria-labelledby="stream-title">
         <div className="section-label">
           <span>04</span>
+          <h2 id="stream-title">Stream</h2>
+          <p>
+            This page is a snapshot. The Stream keeps your agents on the current rules without a reinstall, in Claude
+            Code, Codex, Cursor, OpenClaw, Hermes, Gemini CLI, and Copilot.
+          </p>
+        </div>
+        <div className="stream-offer">
+          <strong>{PRICE_LABEL}</strong>
+          <StreamStatus />
+          <div className="stream-actions">
+            <form method="post" action="/v1/checkout">
+              <button type="submit" className="button">
+                Subscribe with Stripe
+              </button>
+            </form>
+            <Link href="/stream">How it works ↗</Link>
+          </div>
+        </div>
+      </section>
+
+      <section className="method" id="method">
+        <div className="section-label">
+          <span>05</span>
           <h2>How rules are checked</h2>
           <p>A script fetches every source and records what changed. People approve the guidance.</p>
         </div>

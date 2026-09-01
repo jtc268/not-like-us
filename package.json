@@ -1,0 +1,16 @@
+{
+  "name": "not-like-us",
+  "version": "1.0.0",
+  "description": "Not Like Us Stream client: keeps AI agents on the current Not Like Us rules. Run with npx github:jtc268/not-like-us <command>.",
+  "type": "module",
+  "bin": {
+    "not-like-us": "stream/nlu.mjs",
+    "nlu": "stream/nlu.mjs"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "license": "SEE LICENSE IN LICENSE",
+  "repository": "github:jtc268/not-like-us",
+  "homepage": "https://notlikeus.adorellc.pro/stream"
+}

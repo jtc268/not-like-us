@@ -24,3 +24,5 @@ It checks that every rule has an ID, scope, evidence level, and known sources, t
 A rule may not claim that a pattern proves AI authorship. New tool folders must contain both `WRITING.md` and `DESIGN.md`.
 
 The radar script only updates source metadata. A maintainer must review any editorial change.
+
+By contributing you license your contribution to Adore LLC under the same terms as the repository (PolyForm Noncommercial 1.0.0) and allow it to be included in the paid Stream edition. If you would rather not, open an issue with the report instead of a pull request.

@@ -18,6 +18,13 @@ export const metadata: Metadata = {
   title: 'Not Like Us | Anti-default field manual',
   description: 'Cited rules for the defaults that make unrelated AI work look the same.',
   metadataBase: new URL('https://notlikeus.adorellc.pro'),
+  icons: {
+    icon: [
+      { url: '/favicon.svg', type: 'image/svg+xml' },
+      { url: '/favicon.ico', sizes: '48x48' },
+    ],
+    apple: '/apple-touch-icon.png',
+  },
   openGraph: {
     title: 'Not Like Us',
     description: 'An anti-default field manual for AI-assisted writing and design.',

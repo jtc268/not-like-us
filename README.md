@@ -4,7 +4,19 @@
 
 An open, cited field manual for making AI-assisted writing and interfaces look like they came from a specific person, product, and situation.
 
-Read it at [notlikeus.adorellc.pro](https://notlikeus.adorellc.pro). Free to use and fork. If it saved you from another purple gradient, [buy me a coffee](https://buymeacoffee.com/refresh1).
+Read it at [notlikeus.adorellc.pro](https://notlikeus.adorellc.pro). Free to fork and use for noncommercial work. If it saved you from another purple gradient, [buy me a coffee](https://buymeacoffee.com/refresh1).
+
+## Two editions
+
+This repository is the **snapshot**. Clone it, install the skill, paste the block. It stays where it was the day you took it.
+
+The [**Stream**](https://notlikeus.adorellc.pro/stream) is the live edition: $4.99 a month, one key, every machine you own. Your agents pull the current rules on their own, so a Claude Code, Codex, Cursor, OpenClaw, Hermes, Gemini CLI, or Copilot setup never drifts back to the defaults this manual exists to catch. It also licenses commercial use. Details and the feed reference are in [stream/README.md](stream/README.md).
+
+```sh
+npx github:jtc268/not-like-us sync
+```
+
+That command works without a key. It installs the snapshot into every agent on the machine and shows how far behind the Stream it is.
 
 ## Install the skill
 
@@ -103,4 +115,4 @@ Each rule has a stable ID, scope, source list, and evidence level:
 
 ## License
 
-Code is [MIT](LICENSE). The written guides and rule data are [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). Product names belong to their owners, and linked sources keep their own licenses.
+Everything here is under the [PolyForm Noncommercial License 1.0.0](LICENSE): free to read, fork, and use for personal, educational, nonprofit, and other noncommercial work. Commercial use comes with a [Stream subscription](https://notlikeus.adorellc.pro/stream). Versions before 2026-09-01 were published under MIT and CC BY 4.0, and copies taken under those terms keep them. Product names belong to their owners, and linked sources keep their own licenses.

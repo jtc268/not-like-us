@@ -3,6 +3,10 @@
 
 Canonical: https://github.com/jtc268/not-like-us
 Site: https://notlikeus.adorellc.pro
+Stream (paid, live edition): https://notlikeus.adorellc.pro/stream
+Stream feed reference: /stream/README.md
+Public feed version: https://notlikeus.adorellc.pro/v1/version
+Public snapshot feed: https://notlikeus.adorellc.pro/v1/snapshot
 Skill: /skills/not-like-us/SKILL.md
 Paste block: /manual/prompt.txt
 Agent instructions: /AGENTS.md
@@ -13,5 +17,6 @@ Per-tool guides: /manual/tools/{tool}/WRITING.md and /manual/tools/{tool}/DESIGN
 Sources: /manual/data/sources.json
 Rule data: /manual/data/rules.json
 
+License: PolyForm Noncommercial 1.0.0 for the snapshot; commercial use through the Stream subscription.
 Priority: local brand, voice, accessibility, and design-system requirements override this repository.
 Interpretation: recurring defaults are prompts to inspect, not proof that AI made an artifact.

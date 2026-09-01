@@ -27,7 +27,16 @@
   },
   "schema_version": 1,
   "secrets": {
-    "required": []
+    "required": [
+      "STRIPE_SECRET_KEY",
+      "STRIPE_PRICE_ID",
+      "STRIPE_PORTAL_CONFIG_ID",
+      "NLU_KEY_SECRET",
+      "RESEND_API_KEY",
+      "NLU_FROM_EMAIL",
+      "NLU_SOURCE_REPO",
+      "NLU_SOURCE_TOKEN"
+    ]
   },
   "slug": "notlikeus",
   "source_repo": "https://github.com/jtc268/not-like-us.git",
