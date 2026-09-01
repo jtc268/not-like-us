@@ -42,12 +42,12 @@ export default function Home() {
             <br />
             US
           </h1>
-          <p className="deck">Cited field notes on defaults that make unrelated AI work look the same.</p>
+          <p className="deck">Cited field notes on defaults that make AI work look the same.</p>
         </div>
         <aside className="hero-note">
           <span>Current edition</span>
           <strong>SEP 2026</strong>
-          <p>Rules carry sources and a better move, not a prescription.</p>
+          <p>Each rule includes sources and an idea for a more original choice.</p>
         </aside>
       </section>
 
@@ -55,7 +55,7 @@ export default function Home() {
         <div className="section-label">
           <span>01</span>
           <h2 id="quick-title">Paste this into any AI</h2>
-          <p>Short project rules. The full repository carries the source trail.</p>
+          <p>Short project rules. Sources and full guides are on GitHub.</p>
         </div>
         <CopyBlock value={quickRules} />
       </section>
