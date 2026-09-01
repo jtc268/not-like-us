@@ -58,7 +58,7 @@ echo "healthz ok, stream source=$SOURCE, x402=$X402, subscribe=$SUB"
 step "package"
 docker save "$IMAGE" | gzip -1 > "$OUT/image.tar.gz"
 rm -f "$OUT"/image.tar.gz.part-*
-(cd "$OUT" && split -b 20m image.tar.gz image.tar.gz.part- && sha256sum image.tar.gz.part-* > chunks.sha256)
+(cd "$OUT" && split -b 20m image.tar.gz image.tar.gz.part- && sha256sum -t image.tar.gz.part-* | sed "s/ */  /" > chunks.sha256)
 ARCHIVE_SHA="sha256:$(sha256sum "$OUT/image.tar.gz" | cut -d' ' -f1)"
 printf '%s\n' "docker build --platform linux/amd64 -t $IMAGE -f site/Containerfile ." "PASS" "image_id=$LOCAL_ID" > "$OUT/build.log"
 printf '%s\n' "validate: PASS" "image test stage (lint, build): PASS" "locked-down smoke: healthz $RELEASE, stream source $SOURCE, x402 $X402, subscribe $SUB" > "$OUT/test.log"
