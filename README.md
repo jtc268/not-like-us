@@ -1,65 +1,106 @@
-![Not Like Us, anti-default field manual](public/not-like-us-banner.png)
+![Not Like Us, anti-default field manual](site/public/not-like-us-banner.png)
 
 # Not Like Us
 
 An open, cited field manual for making AI-assisted writing and interfaces look like they came from a specific person, product, and situation.
 
-Point an agent at this repository, or paste the block below into its project rules.
+Read it at [notlikeus.adorellc.pro](https://notlikeus.adorellc.pro). Free to use and fork. If it saved you from another purple gradient, [buy me a coffee](https://buymeacoffee.com/refresh1).
+
+## Install the skill
+
+Paste this into Claude Code, Codex, Cursor, or any agent that installs skills:
+
+```text
+Install the /not-like-us skill from https://github.com/jtc268/not-like-us
+```
+
+Or use the skills CLI:
+
+```sh
+npx skills add jtc268/not-like-us --skill not-like-us --global --yes
+```
+
+Then:
+
+```text
+/not-like-us review (a draft, page, or component)
+/not-like-us build (a brief)
+```
 
 ## Copy this into any AI
 
+If the tool does not install skills, paste this into its project rules or first message.
+
 ```text
 Use the Not Like Us rules for every writing and interface decision.
-Read: https://github.com/jtc268/not-like-us
+Rules: https://raw.githubusercontent.com/jtc268/not-like-us/main/AGENTS.md
 
-Start from the audience, task, and existing brand. Do not invent a generic house style.
-Avoid purple gradients, Inter-by-reflex, glass cards, rounded-everything, card grids,
-centered hero formulas, decorative pills, icon tiles, fake dashboards, and motion without purpose.
-Avoid throat-clearing, binary contrast slogans, faux insight, hype, vague attribution,
+Start from the audience, task, real content, and existing brand. Local design systems and voice guides win.
+Reject visual choices the tool supplied without a reason: purple gradients, aurora blobs, glass panels,
+rounded cards around everything, Inter or Geist by reflex, centered hero formulas, three equal columns,
+decorative pills and icon tiles, fake charts and testimonials, filler imagery, and motion that explains nothing.
+Reject empty writing patterns: setup before the point, "not X but Y" slogans, vague consensus, hype adjectives,
 rule-of-three filler, synonym cycling, stacked fragments, recap endings, and em dashes.
-Use concrete details, real hierarchy, domain-specific structure, deliberate type, restrained color,
-plain claims, named sources, varied sentence rhythm, and a human review before shipping.
-When a local design system or voice guide conflicts with this block, follow the local system.
+Use real data and real states. Name a source for every factual claim. Preserve the author's voice.
+Never claim that one tell proves AI authorship.
+If the work could belong to any product after swapping the logo, make it specific.
 ```
+
+## What it catches
+
+| Default | Instead |
+| --- | --- |
+| It's not a chatbot. It's a teammate. | It answers Zendesk tickets and escalates any refund over $200. |
+| Experts agree AI content is flooding the web. | Pew sampled 10,000 pages from July 2026. One in ten showed signs of AI writing or editing. |
+| In today's fast-paced world, teams need to ship faster than ever. | Delete it. Start with the second sentence. |
+| Faster. Smarter. Together. | Code review that took an afternoon now takes twenty minutes. |
+| This underscores the importance of testing. | The bug shipped because nobody ran the test. |
+| A hero, three benefit cards, a logo strip, testimonials, pricing, and a CTA for a dispatch tool. | The dispatch queue on the first screen, sorted by how late each delivery is. |
+| A violet gradient because the brief did not name a color. | Two colors with jobs: one for the brand, one for the destructive action. |
+| Every section in a rounded card with a drop shadow. | Rules and spacing. Cards only around things a user picks up and moves. |
+| Inter everywhere, chosen because it was available. | Tabular figures for the ledger. A wide sans for wayfinding. A reason for each. |
+| A polished happy path. | Loading, empty, error, permission, and long-name states before launch. |
+
+Each rule has a stable ID, an evidence level, and named sources. The full lists are in [the writing rules](manual/rules/WRITING.md) and [the design rules](manual/rules/DESIGN.md).
 
 ## Start here
 
-- Agents: read [AGENTS.md](AGENTS.md), then the relevant tool's `WRITING.md` and `DESIGN.md`.
-- People: start with [the universal writing guide](rules/WRITING.md) or [the universal design guide](rules/DESIGN.md).
-- Systems: consume [not-like-us.json](not-like-us.json) or [data/rules.json](data/rules.json).
-- Maintainers: see [CONTRIBUTING.md](CONTRIBUTING.md) and [the research method](research/METHOD.md).
+- Agents: [AGENTS.md](AGENTS.md), then the guides for your tool below.
+- People: [the writing rules](manual/rules/WRITING.md) and [the design rules](manual/rules/DESIGN.md).
+- Systems: [not-like-us.json](manual/not-like-us.json) or [rules.json](manual/data/rules.json).
+- Maintainers: [CONTRIBUTING.md](CONTRIBUTING.md) and [the research method](manual/research/METHOD.md).
 
-## Field guides
+## Tool guides
 
 | Tool | Writing | Design |
 | --- | --- | --- |
-| Lovable | [Guide](tools/lovable/WRITING.md) | [Guide](tools/lovable/DESIGN.md) |
-| Claude | [Guide](tools/claude/WRITING.md) | [Guide](tools/claude/DESIGN.md) |
-| Codex | [Guide](tools/codex/WRITING.md) | [Guide](tools/codex/DESIGN.md) |
-| ChatGPT | [Guide](tools/chatgpt/WRITING.md) | [Guide](tools/chatgpt/DESIGN.md) |
-| v0 | [Guide](tools/v0/WRITING.md) | [Guide](tools/v0/DESIGN.md) |
-| Bolt | [Guide](tools/bolt/WRITING.md) | [Guide](tools/bolt/DESIGN.md) |
-| Cursor | [Guide](tools/cursor/WRITING.md) | [Guide](tools/cursor/DESIGN.md) |
-| Replit | [Guide](tools/replit/WRITING.md) | [Guide](tools/replit/DESIGN.md) |
-| Base44 | [Guide](tools/base44/WRITING.md) | [Guide](tools/base44/DESIGN.md) |
-| Gemini | [Guide](tools/gemini/WRITING.md) | [Guide](tools/gemini/DESIGN.md) |
-| Gamma | [Guide](tools/gamma/WRITING.md) | [Guide](tools/gamma/DESIGN.md) |
+| Lovable | [Guide](manual/tools/lovable/WRITING.md) | [Guide](manual/tools/lovable/DESIGN.md) |
+| Claude | [Guide](manual/tools/claude/WRITING.md) | [Guide](manual/tools/claude/DESIGN.md) |
+| Codex | [Guide](manual/tools/codex/WRITING.md) | [Guide](manual/tools/codex/DESIGN.md) |
+| ChatGPT | [Guide](manual/tools/chatgpt/WRITING.md) | [Guide](manual/tools/chatgpt/DESIGN.md) |
+| v0 | [Guide](manual/tools/v0/WRITING.md) | [Guide](manual/tools/v0/DESIGN.md) |
+| Bolt | [Guide](manual/tools/bolt/WRITING.md) | [Guide](manual/tools/bolt/DESIGN.md) |
+| Cursor | [Guide](manual/tools/cursor/WRITING.md) | [Guide](manual/tools/cursor/DESIGN.md) |
+| Replit | [Guide](manual/tools/replit/WRITING.md) | [Guide](manual/tools/replit/DESIGN.md) |
+| Base44 | [Guide](manual/tools/base44/WRITING.md) | [Guide](manual/tools/base44/DESIGN.md) |
+| Gemini | [Guide](manual/tools/gemini/WRITING.md) | [Guide](manual/tools/gemini/DESIGN.md) |
+| Gamma | [Guide](manual/tools/gamma/WRITING.md) | [Guide](manual/tools/gamma/DESIGN.md) |
 
 ## Limits
 
-This project does not detect AI authorship. A purple gradient, an em dash, or a three-card row proves nothing. Use the catalog to notice clusters of unearned choices and replace them with choices grounded in the actual work.
+This project does not detect AI authorship. A purple gradient, an em dash, or a three-card row proves nothing on its own. Use the catalog to notice clusters of unearned choices and replace them with choices grounded in the actual work.
 
-## How we check rules
+## How rules are checked
 
 Each rule has a stable ID, scope, source list, and evidence level:
 
 - **Documented:** the product or model provider describes the behavior.
-- **Observed:** the pattern repeats in controlled prompts or public artifacts.
-- **Corroborated:** independent sources report the same pattern.
+- **Observed:** the pattern repeats in public artifacts or recorded prompt runs.
+- **Corroborated:** more than one independent source reports the same pattern.
 - **Hypothesis:** useful enough to test, not strong enough to state as fact.
 
-Rules are reviewed weekly by automation and changed through pull requests. The radar can flag stale sources and product changes, but a human must approve any guidance change.
+`node manual/scripts/validate.mjs` checks the rule data, checks every cited link against the source ledger, and scans every file for em dashes. `node manual/scripts/research-radar.mjs` fetches each source and records changed hashes in [radar.json](manual/data/radar.json). Run both before changing a rule. A person approves any guidance change.
 
 ## License
 
-Code is [MIT](LICENSE). Editorial guidance is [CC BY 4.0](LICENSE-CONTENT.md).
+Code is [MIT](LICENSE). The written guides and rule data are [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). Product names belong to their owners, and linked sources keep their own licenses.

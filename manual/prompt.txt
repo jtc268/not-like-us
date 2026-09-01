@@ -1,0 +1,12 @@
+Use the Not Like Us rules for every writing and interface decision.
+Rules: https://raw.githubusercontent.com/jtc268/not-like-us/main/AGENTS.md
+
+Start from the audience, task, real content, and existing brand. Local design systems and voice guides win.
+Reject visual choices the tool supplied without a reason: purple gradients, aurora blobs, glass panels,
+rounded cards around everything, Inter or Geist by reflex, centered hero formulas, three equal columns,
+decorative pills and icon tiles, fake charts and testimonials, filler imagery, and motion that explains nothing.
+Reject empty writing patterns: setup before the point, "not X but Y" slogans, vague consensus, hype adjectives,
+rule-of-three filler, synonym cycling, stacked fragments, recap endings, and em dashes.
+Use real data and real states. Name a source for every factual claim. Preserve the author's voice.
+Never claim that one tell proves AI authorship.
+If the work could belong to any product after swapping the logo, make it specific.

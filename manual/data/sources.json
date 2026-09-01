@@ -1,0 +1,292 @@
+[
+  {
+    "id": "openai-frontend",
+    "type": "official",
+    "title": "Frontend prompt guidance",
+    "publisher": "OpenAI",
+    "url": "https://developers.openai.com/api/docs/guides/frontend-prompt",
+    "accessed": "2026-09-01",
+    "weight": "primary",
+    "notes": "Explicitly warns against decorative heroes, floating and nested cards, excessive radii, one-note palettes, and generic operational-app layouts."
+  },
+  {
+    "id": "openai-latest",
+    "type": "official",
+    "title": "Latest model prompting guide",
+    "publisher": "OpenAI",
+    "url": "https://developers.openai.com/api/docs/guides/latest-model",
+    "accessed": "2026-09-01",
+    "weight": "primary",
+    "notes": "Current guidance on explicit outcomes, style, and verification."
+  },
+  {
+    "id": "openai-prompt-engineering",
+    "type": "official",
+    "title": "Prompt engineering",
+    "publisher": "OpenAI",
+    "url": "https://platform.openai.com/docs/guides/prompt-engineering",
+    "accessed": "2026-09-01",
+    "weight": "primary",
+    "notes": "General prompting guidance, including how to specify audience, format, and constraints."
+  },
+  {
+    "id": "openai-image-generation",
+    "type": "official",
+    "title": "Image generation",
+    "publisher": "OpenAI",
+    "url": "https://platform.openai.com/docs/guides/image-generation",
+    "accessed": "2026-09-01",
+    "weight": "primary",
+    "notes": "Documents image generation capabilities and prompting."
+  },
+  {
+    "id": "anthropic-opus-style",
+    "type": "official",
+    "title": "Prompting Claude Opus 4.8",
+    "publisher": "Anthropic",
+    "url": "https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-opus-4-8",
+    "accessed": "2026-09-01",
+    "weight": "primary",
+    "notes": "Documents Claude's cream background near #F4F1EA, serif display type, italic accent words, and terracotta or amber house style."
+  },
+  {
+    "id": "anthropic-prompt-overview",
+    "type": "official",
+    "title": "Prompt engineering overview",
+    "publisher": "Anthropic",
+    "url": "https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/overview",
+    "accessed": "2026-09-01",
+    "weight": "primary",
+    "notes": "Anthropic's general prompting guidance for Claude."
+  },
+  {
+    "id": "gemini-prompting",
+    "type": "official",
+    "title": "Prompt design strategies",
+    "publisher": "Google",
+    "url": "https://ai.google.dev/gemini-api/docs/prompting-strategies",
+    "accessed": "2026-09-01",
+    "weight": "primary",
+    "notes": "Google's prompting guidance for Gemini models."
+  },
+  {
+    "id": "material-design",
+    "type": "official",
+    "title": "Material Design 3",
+    "publisher": "Google",
+    "url": "https://m3.material.io/",
+    "accessed": "2026-09-01",
+    "weight": "corroborating",
+    "notes": "Reference for the Material system that generic Gemini output can resemble."
+  },
+  {
+    "id": "lovable-design",
+    "type": "official",
+    "title": "Design guidance",
+    "publisher": "Lovable",
+    "url": "https://docs.lovable.dev/features/design-guidance",
+    "accessed": "2026-09-01",
+    "weight": "primary",
+    "notes": "Documents design previews, placeholder limits, and a standard dashboard flow."
+  },
+  {
+    "id": "lovable-design-systems",
+    "type": "official",
+    "title": "Design systems",
+    "publisher": "Lovable",
+    "url": "https://docs.lovable.dev/features/design-systems",
+    "accessed": "2026-09-01",
+    "weight": "primary",
+    "notes": "Documents bringing a brand and template into a Lovable project."
+  },
+  {
+    "id": "v0-systems",
+    "type": "official",
+    "title": "Design systems",
+    "publisher": "v0",
+    "url": "https://v0.dev/docs/design-systems",
+    "accessed": "2026-09-01",
+    "weight": "primary",
+    "notes": "Documents shadcn/ui, Next.js, and Tailwind defaults and design-system support. Now redirects to the legacy design-systems page."
+  },
+  {
+    "id": "v0-design-systems-2",
+    "type": "official",
+    "title": "Design Systems 2.0",
+    "publisher": "v0",
+    "url": "https://v0.app/docs/design-systems-2",
+    "accessed": "2026-09-01",
+    "weight": "primary",
+    "notes": "Current v0 design-system documentation."
+  },
+  {
+    "id": "gamma-cards",
+    "type": "official",
+    "title": "How Gamma maps content to slides using cards",
+    "publisher": "Gamma",
+    "url": "https://gamma.app/explore/content/guides/how-gamma-maps-content-directly-to-slides-using-its-card-system",
+    "accessed": "2026-09-01",
+    "weight": "primary",
+    "notes": "Describes flexible auto-layout cards and AI-selected card layouts. Returns 403 to automated fetches and loads in a browser."
+  },
+  {
+    "id": "replit-design-mode",
+    "type": "official",
+    "title": "Introducing Design Mode",
+    "publisher": "Replit",
+    "url": "https://replit.com/blog/design-mode",
+    "accessed": "2026-09-01",
+    "weight": "primary",
+    "notes": "Describes front-end-only design generation and conversion into an app."
+  },
+  {
+    "id": "base44-design",
+    "type": "official",
+    "title": "Design your app",
+    "publisher": "Base44",
+    "url": "https://docs.base44.com/Building-your-app/Design",
+    "accessed": "2026-09-01",
+    "weight": "primary",
+    "notes": "Documents themes, global settings, component styling, and AI design prompts."
+  },
+  {
+    "id": "bolt-docs",
+    "type": "official",
+    "title": "Bolt Help Center",
+    "publisher": "Bolt",
+    "url": "https://support.bolt.new/",
+    "accessed": "2026-09-01",
+    "weight": "primary",
+    "notes": "Product documentation for Bolt."
+  },
+  {
+    "id": "cursor-docs",
+    "type": "official",
+    "title": "Cursor documentation",
+    "publisher": "Cursor",
+    "url": "https://docs.cursor.com/",
+    "accessed": "2026-09-01",
+    "weight": "primary",
+    "notes": "Documents rules, agent behavior, and repository context."
+  },
+  {
+    "id": "pew-corpus-2026",
+    "type": "research",
+    "title": "How much of the internet is written with AI?",
+    "publisher": "Pew Research Center",
+    "url": "https://www.pewresearch.org/data-labs/2026/08/20/how-much-of-the-internet-is-written-with-ai/",
+    "accessed": "2026-09-01",
+    "weight": "primary",
+    "notes": "Corpus study of roughly 490,000 webpages with a 10,000-page July 2026 sample. Reports aggregate language shifts and cautions against using single features as proof."
+  },
+  {
+    "id": "no-ai-slop",
+    "type": "repository",
+    "title": "No AI Slop",
+    "publisher": "Peter Yang and contributors",
+    "url": "https://github.com/petergyang/no-ai-slop",
+    "accessed": "2026-09-01",
+    "weight": "corroborating",
+    "notes": "Writing and editing rules centered on voice, specificity, minimum effective edits, and recurring generated patterns."
+  },
+  {
+    "id": "signs-of-ai-writing",
+    "type": "repository",
+    "title": "Signs of AI Writing",
+    "publisher": "egc365 and contributors",
+    "url": "https://github.com/egc365/signs-of-ai-writing",
+    "accessed": "2026-09-01",
+    "weight": "corroborating",
+    "notes": "Structured, versioned source for the patterns in Wikipedia's field guide."
+  },
+  {
+    "id": "unslop-ui",
+    "type": "repository",
+    "title": "Unslop UI",
+    "publisher": "Claudiu Sararu and contributors",
+    "url": "https://github.com/claudiusararu/unslop-ui-skill",
+    "accessed": "2026-09-01",
+    "weight": "corroborating",
+    "notes": "Detailed catalog of recurring typography, color, layout, component, imagery, copy, and motion patterns."
+  },
+  {
+    "id": "ahd-taxonomy",
+    "type": "repository",
+    "title": "AHD slop taxonomy",
+    "publisher": "Ad Astra Computing",
+    "url": "https://github.com/Ad-Astra-Computing/ahd/blob/main/docs/SLOP_TAXONOMY.md",
+    "accessed": "2026-09-01",
+    "weight": "corroborating",
+    "notes": "A structured catalog of recurring generated-interface patterns."
+  },
+  {
+    "id": "anti-ai-slop",
+    "type": "repository",
+    "title": "Anti AI Slop",
+    "publisher": "Vinayak Shukla and contributors",
+    "url": "https://github.com/Vinayak-Shukla-03/anti-ai-slop",
+    "accessed": "2026-09-01",
+    "weight": "corroborating",
+    "notes": "Design and writing checklist that also warns against converging on a replacement house style."
+  },
+  {
+    "id": "wikipedia-ai-writing",
+    "type": "community",
+    "title": "Signs of AI writing",
+    "publisher": "Wikipedia contributors",
+    "url": "https://en.wikipedia.org/wiki/Wikipedia:Signs_of_AI_writing",
+    "accessed": "2026-09-01",
+    "weight": "corroborating",
+    "notes": "A maintained field guide for editors. Useful for clusters and examples, not authorship detection."
+  },
+  {
+    "id": "brandiddit-lovable",
+    "type": "community",
+    "title": "Lovable brand system",
+    "publisher": "Brandiddit",
+    "url": "https://brandiddit.ai/for/lovable",
+    "accessed": "2026-09-01",
+    "weight": "anecdotal",
+    "notes": "Practitioner guidance on supplying a brand system before generation."
+  },
+  {
+    "id": "reddit-claude-fonts",
+    "type": "community",
+    "title": "You can spot a Claude-built app instantly",
+    "publisher": "r/ClaudeAI",
+    "url": "https://www.reddit.com/r/ClaudeAI/comments/1u95x9l/you_can_spot_a_claudebuilt_app_instantly_its_the/",
+    "accessed": "2026-09-01",
+    "weight": "anecdotal",
+    "notes": "Community thread on Claude's recurring type and color choices."
+  },
+  {
+    "id": "reddit-italic-headline",
+    "type": "community",
+    "title": "Whatever this is called, I hate it",
+    "publisher": "r/webdesign",
+    "url": "https://www.reddit.com/r/webdesign/comments/1te1sui/whatever_this_is_called_i_hate_it/",
+    "accessed": "2026-09-01",
+    "weight": "anecdotal",
+    "notes": "Community thread on the italic display-word headline pattern."
+  },
+  {
+    "id": "reddit-cursor-premium",
+    "type": "community",
+    "title": "How do you get Cursor to build premium SaaS UI",
+    "publisher": "r/cursor",
+    "url": "https://www.reddit.com/r/cursor/comments/1uc5ani/how_do_you_get_cursor_to_build_premium_saas_ui/",
+    "accessed": "2026-09-01",
+    "weight": "anecdotal",
+    "notes": "Community thread on prompting Cursor for interface work."
+  },
+  {
+    "id": "reddit-ai-decks",
+    "type": "community",
+    "title": "Do all AI-generated decks look the same?",
+    "publisher": "r/powerpoint",
+    "url": "https://www.reddit.com/r/powerpoint/comments/1u3xxm9/is_it_just_me_or_do_all_ai_generated_decks_look/",
+    "accessed": "2026-09-01",
+    "weight": "anecdotal",
+    "notes": "Community thread on repeated AI deck patterns."
+  }
+]

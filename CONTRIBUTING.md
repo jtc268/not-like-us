@@ -1,6 +1,6 @@
 # Contributing
 
-Contributions should make the field guide more accurate, not merely longer.
+A contribution should make the field manual more accurate. Length is not the goal.
 
 ## A useful report contains
 
@@ -11,6 +11,16 @@ Contributions should make the field guide more accurate, not merely longer.
 - at least one better move that remains context-dependent
 - source type: official, research, repository, benchmark, or community
 
-Run `npm run validate` before opening a pull request. A rule may not claim that a pattern proves AI authorship. New tool folders must contain both `WRITING.md` and `DESIGN.md`.
+## Before opening a pull request
 
-Automated radar updates only source metadata. A maintainer must review any editorial change.
+Run the validator from the repository root:
+
+```sh
+node manual/scripts/validate.mjs
+```
+
+It checks that every rule has an ID, scope, evidence level, and known sources, that every link in a rule or guide appears in `manual/data/sources.json`, that the README paste block matches `manual/prompt.txt`, that the skill mentions every rule ID, and that no file contains an em dash.
+
+A rule may not claim that a pattern proves AI authorship. New tool folders must contain both `WRITING.md` and `DESIGN.md`.
+
+The radar script only updates source metadata. A maintainer must review any editorial change.

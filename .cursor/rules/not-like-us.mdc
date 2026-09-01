@@ -3,4 +3,4 @@ description: Avoid generic AI writing and interface defaults
 alwaysApply: true
 ---
 
-Read `AGENTS.md`, `rules/WRITING.md`, `rules/DESIGN.md`, `tools/cursor/WRITING.md`, and `tools/cursor/DESIGN.md`. Reuse the repository's vocabulary, tokens, and components. Cite any intentional exception in the handoff.
+Read `AGENTS.md`, `manual/rules/WRITING.md`, `manual/rules/DESIGN.md`, `manual/tools/cursor/WRITING.md`, and `manual/tools/cursor/DESIGN.md`. Reuse the repository's vocabulary, tokens, and components. Cite any intentional exception in the handoff.

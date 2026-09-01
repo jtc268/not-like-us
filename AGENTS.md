@@ -2,11 +2,13 @@
 
 Apply this repository in this order:
 
-1. Read `rules/WRITING.md` and `rules/DESIGN.md`.
-2. Read both guides in the folder for the tool you are using.
+1. Read `manual/rules/WRITING.md` and `manual/rules/DESIGN.md`.
+2. Read both guides in `manual/tools/<tool>/` for the tool you are using.
 3. Inspect the project's existing product, audience, content, brand, and component system.
 4. Treat local design systems and voice guides as higher priority than this repository.
 5. Before delivery, run the checks below and state any intentional exception.
+
+The same rules are packaged as an installable skill in `skills/not-like-us/SKILL.md`.
 
 ## Hard checks
 
@@ -25,4 +27,4 @@ Apply this repository in this order:
 
 Ask: could this exact writing, palette, type system, component mix, and page sequence be pasted into an unrelated AI product? If yes, revise the parts that travel too easily.
 
-Machine-readable rules are in `data/rules.json`. Stable IDs may be cited in reviews, for example `D-COLOR-001`.
+Machine-readable rules are in `manual/data/rules.json`. Stable IDs may be cited in reviews, for example `D-COLOR-001`.
