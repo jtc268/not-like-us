@@ -46,7 +46,7 @@ export default async function Welcome({ searchParams }: { searchParams: Promise<
         </Link>
         <nav aria-label="Primary navigation">
           <Link href="/#rules">Rules</Link>
-          <Link href="/stream">Stream</Link>
+          <Link href="/subscribe">Subscribe</Link>
           <a href="https://github.com/jtc268/not-like-us">GitHub</a>
         </nav>
       </header>
@@ -60,7 +60,7 @@ export default async function Welcome({ searchParams }: { searchParams: Promise<
           </div>
           <div className="doc">
             <p>
-              Already subscribed and lost the key? Use the recover form on <Link href="/stream#manage">the Stream page</Link>.
+              Already subscribed and lost the key? Use the recover form on <Link href="/subscribe#manage">the subscribe page</Link>.
             </p>
           </div>
         </section>
@@ -84,8 +84,7 @@ export default async function Welcome({ searchParams }: { searchParams: Promise<
               <span>02</span>
               <h2 id="setup-title">Set up once</h2>
               <p>
-                Node 18 or newer. The first command saves the key, the second installs the rules into every agent on the
-                machine, the third keeps them current at the start of every session.
+                Node 18 or newer.
               </p>
             </div>
             <CopyBlock
@@ -98,7 +97,7 @@ export default async function Welcome({ searchParams }: { searchParams: Promise<
               <span>03</span>
               <h2 id="direct-title">Or pull by URL</h2>
               <p>
-                Hermes installs skills from a link and re-fetches them on update. Any tool that reads a URL can do the same.
+                Hermes installs skills from a link and re-fetches them on update.
               </p>
             </div>
             <CopyBlock value={`hermes skills install ${SITE}/v1/k/${key}/SKILL.md\nhermes cron create "0 6 * * *" "Run hermes skills update" --no-agent`} />
@@ -109,8 +108,8 @@ export default async function Welcome({ searchParams }: { searchParams: Promise<
               <span>04</span>
               <h2 id="mcp-title">MCP for any client</h2>
               <p>
-                Exposes the live rules as resources, a tool, and a review prompt. Setup for each tool is on{' '}
-                <Link href="/stream#setup">the Stream page</Link>.
+                Live rules over MCP. Setup for each client is on{' '}
+                <Link href="/subscribe#setup">the subscribe page</Link>.
               </p>
             </div>
             <CopyBlock value={`claude mcp add --scope user not-like-us -- npx -y github:jtc268/not-like-us mcp`} />
@@ -120,7 +119,7 @@ export default async function Welcome({ searchParams }: { searchParams: Promise<
             <div className="section-label">
               <span>05</span>
               <h2>Billing</h2>
-              <p>Update the card, download invoices, or cancel. Cancelling stops the stream at the end of the paid month.</p>
+              <p>Change the card or cancel. Access runs to the end of the paid month.</p>
             </div>
             <form className="inline-form" method="post" action="/v1/portal">
               <input type="hidden" name="key" value={key} />
@@ -132,7 +131,7 @@ export default async function Welcome({ searchParams }: { searchParams: Promise<
 
       <footer className="site-footer">
         <p>One tell cannot prove authorship.</p>
-        <Link href="/stream">Stream setup ↗</Link>
+        <Link href="/subscribe">Setup ↗</Link>
       </footer>
     </main>
   );

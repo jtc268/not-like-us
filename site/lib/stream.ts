@@ -234,7 +234,7 @@ export async function checkoutUrl(origin: string): Promise<string> {
       'line_items[0][price]': env('STRIPE_PRICE_ID'),
       'line_items[0][quantity]': '1',
       success_url: `${origin}/welcome?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${origin}/stream`,
+      cancel_url: `${origin}/subscribe`,
       allow_promotion_codes: 'true',
       billing_address_collection: 'auto',
       'subscription_data[metadata][product]': PRODUCT,
@@ -295,7 +295,7 @@ export async function passCheckoutUrl(origin: string): Promise<string> {
       'line_items[0][adjustable_quantity][maximum]': '12',
       customer_creation: 'always',
       success_url: `${origin}/welcome?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${origin}/stream`,
+      cancel_url: `${origin}/subscribe`,
       allow_promotion_codes: 'true',
       billing_address_collection: 'auto',
       'metadata[product]': PRODUCT,
@@ -342,7 +342,7 @@ export async function portalUrl(customerId: string, origin: string): Promise<str
   const session = await stripe('/v1/billing_portal/sessions', {
     body: {
       customer: customerId,
-      return_url: `${origin}/stream`,
+      return_url: `${origin}/subscribe`,
       configuration: env('STRIPE_PORTAL_CONFIG_ID'),
     },
   });
@@ -369,7 +369,7 @@ export async function customerForPayer(payer: string, network: string): Promise<
 }
 
 export function buyHints() {
-  return { subscribe: `${SITE}/stream`, checkout: `${SITE}/v1/checkout`, pass: `${SITE}/v1/pass`, x402: `${SITE}/v1/x402/pass` };
+  return { subscribe: `${SITE}/subscribe`, checkout: `${SITE}/v1/checkout`, pass: `${SITE}/v1/pass`, x402: `${SITE}/v1/x402/pass` };
 }
 
 export const PAYMENT_LINK = { link: `<${SITE}/v1/x402/pass>; rel="payment"` };
@@ -399,7 +399,7 @@ export async function authorize(key: string | null): Promise<Verdict> {
     if (account.keyVersion !== parsed.version) {
       verdict = { ok: false, status: 401, message: 'That key was rotated. Use the newest key from your welcome email or run nlu recover.', standing: current, customerId: parsed.customerId, until: Date.now() + VERDICT_TTL };
     } else if (!current.ok) {
-      verdict = { ok: false, status: 402, message: `No active subscription (status: ${current.status}). Subscribe again at ${SITE}/stream.`, standing: current, customerId: parsed.customerId, until: Date.now() + VERDICT_TTL };
+      verdict = { ok: false, status: 402, message: `No active subscription (status: ${current.status}). Subscribe again at ${SITE}/subscribe.`, standing: current, customerId: parsed.customerId, until: Date.now() + VERDICT_TTL };
     } else {
       verdict = { ok: true, status: 200, message: 'ok', standing: current, customerId: parsed.customerId, until: Date.now() + VERDICT_TTL };
     }
@@ -569,9 +569,9 @@ export async function sendKeyEmail(to: string, key: string, subject = 'Your Not 
     '',
     `Hermes can pull straight from the URL instead: hermes skills install ${SITE}/v1/k/${key}/SKILL.md`,
     '',
-    `MCP for any client: npx github:jtc268/not-like-us mcp. Setup for each tool is at ${SITE}/stream.`,
+    `MCP for any client: npx github:jtc268/not-like-us mcp. Setup for each tool is at ${SITE}/subscribe.`,
     '',
-    `Manage or cancel billing any time at ${SITE}/stream (Manage billing). Lost this email? ${SITE}/stream has a recover form.`,
+    `Manage or cancel billing any time at ${SITE}/subscribe (Manage billing). Lost this email? ${SITE}/subscribe has a recover form.`,
     '',
     'Not Like Us, Adore LLC',
   ].join('\n');

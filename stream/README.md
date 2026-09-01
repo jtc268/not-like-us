@@ -1,8 +1,12 @@
 # Not Like Us Stream
 
-The Stream is the paid, live edition of the manual. Tool defaults change every few weeks. The Stream delivers each rule change to Claude Code, Codex, Cursor, OpenClaw, Hermes, Gemini CLI, and Copilot as it lands, so a subscriber's work keeps looking like theirs. $4.99 a month, one key per person, any number of machines. Subscribe at https://notlikeus.adorellc.pro/stream.
+The Stream is the paid, live edition of the manual. Tool defaults change every few weeks. The Stream delivers each rule change to Claude Code, Codex, Cursor, OpenClaw, Hermes, Gemini CLI, and Copilot as it lands, so a subscriber's work keeps looking like theirs. $4.99 a month, one key per person, any number of machines. Subscribe at https://notlikeus.adorellc.pro/subscribe.
 
 The public repository is a snapshot. It is free for noncommercial use and it does not update itself.
+
+## Where the rules come from
+
+Every model release gets the six prompts in `manual/benchmarks/suite.json` with default settings and no system prompt. The runner (`node manual/scripts/release-test.mjs --model <id>`) records the outputs, records the same prompts with the rules as standing instructions, and has a judge model draft the defaults it sees against the catalog. A person reviews each finding; kept findings become rules with the model in their scope and ship to the stream. `manual/benchmarks/LEDGER.md` lists every run.
 
 ## Paying
 

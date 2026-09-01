@@ -22,7 +22,7 @@ export default function Home() {
         <nav aria-label="Primary navigation">
           <a href="#rules">Rules</a>
           <a href="#tools">Tools</a>
-          <Link href="/stream">Stream</Link>
+          <Link href="/subscribe">Subscribe</Link>
           <a href={repo}>GitHub</a>
         </nav>
       </header>
@@ -38,12 +38,12 @@ export default function Home() {
             <br />
             US
           </h1>
-          <p className="deck">Cited rules for the defaults that make unrelated AI work look the same.</p>
+          <p className="deck">Rules that make AI work look less the same.</p>
         </div>
         <aside className="hero-note">
           <span>Current edition</span>
           <strong>SEP 2026</strong>
-          <p>Every rule names its sources and a better move.</p>
+          <p>Every rule has a source and a fix.</p>
         </aside>
       </section>
 
@@ -96,8 +96,7 @@ export default function Home() {
           <span>04</span>
           <h2 id="stream-title">Stream</h2>
           <p>
-            This page is a snapshot. The Stream keeps your agents on the current rules without a reinstall, in Claude
-            Code, Codex, Cursor, OpenClaw, Hermes, Gemini CLI, and Copilot.
+            This page is a snapshot. Every model release gets the same test, and what it does by default becomes a rule. The Stream keeps your agents on the current rules.
           </p>
         </div>
         <div className="stream-offer">
@@ -109,7 +108,7 @@ export default function Home() {
                 Subscribe with Stripe
               </button>
             </form>
-            <Link href="/stream">How it works ↗</Link>
+            <Link href="/subscribe">How it works ↗</Link>
           </div>
         </div>
       </section>

@@ -20,7 +20,7 @@ export async function GET() {
           output: { type: 'json', example: { key: 'nlu_...', until: '2026-10-01T00:00:00.000Z', days: PASS_DAYS } },
         },
       ],
-      also: { llms: `${SITE}/llms.txt`, openapi: `${SITE}/openapi.json`, agents: `${SITE}/agents`, humans: `${SITE}/stream` },
+      also: { llms: `${SITE}/llms.txt`, openapi: `${SITE}/openapi.json`, agents: `${SITE}/agents`, humans: `${SITE}/subscribe` },
     },
     200,
     { 'cache-control': 'public, max-age=300', 'access-control-allow-origin': '*' },

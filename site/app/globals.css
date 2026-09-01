@@ -227,3 +227,20 @@ pre { margin: 0; padding: clamp(4.5rem, 5vw, 5rem) clamp(2rem, 5vw, 5rem); overf
 .hero-note .button.secondary:hover, .hero-note .button.secondary:focus-visible { background: var(--ink); color: var(--acid); }
 .hero-note form + form { margin-top: .6rem; }
 .hero-note .fine { margin-top: 1.2rem; font-size: .68rem; line-height: 1.55; color: var(--ink); opacity: .8; }
+
+/* Release test */
+.test-body { display: grid; gap: 0; }
+.prompt-list { display: flex; flex-wrap: wrap; gap: .5rem .9rem; margin: 0; padding: 2rem clamp(1.25rem, 3vw, 3rem) 0; list-style: none; font-size: .72rem; }
+.prompt-list li { padding: .35rem .6rem; border: 1px solid var(--rule); }
+.ledger { font-size: .72rem; }
+.ledger td, .ledger th { padding: .6rem .5rem; }
+.evidence { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0; margin: 0; border-top: 1px solid var(--rule); }
+.evidence figure { margin: 0; padding: 1.25rem clamp(1.25rem, 3vw, 3rem); border-right: 1px solid var(--rule); }
+.evidence figure:last-child { border-right: 0; }
+.evidence img { display: block; width: 100%; height: auto; border: 1px solid var(--rule); }
+.evidence figcaption { margin-top: .8rem; font-size: .7rem; line-height: 1.5; color: var(--muted); }
+.evidence figcaption b { color: var(--ink); }
+@media (max-width: 620px) {
+  .evidence { grid-template-columns: 1fr; }
+  .evidence figure { border-right: 0; border-bottom: 1px solid var(--rule); }
+}

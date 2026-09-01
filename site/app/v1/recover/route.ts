@@ -28,7 +28,7 @@ export async function POST(request: Request) {
       break;
     }
     if (type.includes('application/json')) return json({ message });
-    return Response.redirect(`${new URL(request.url).origin}/stream?recovered=1`, 303);
+    return Response.redirect(`${new URL(request.url).origin}/subscribe?recovered=1`, 303);
   } catch (error) {
     return errorResponse(error);
   }

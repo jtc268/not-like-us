@@ -2,21 +2,27 @@
 
 # Not Like Us
 
-An open, cited field manual for making AI-assisted writing and interfaces look like they came from a specific person, product, and situation.
+A field manual for keeping AI-assisted writing and interfaces from looking like everyone else's.
 
 Read it at [notlikeus.adorellc.pro](https://notlikeus.adorellc.pro). Free to fork and use for noncommercial work. If it saved you from another purple gradient, [buy me a coffee](https://buymeacoffee.com/refresh1).
 
 ## Two editions
 
-This repository is the **snapshot**. Clone it, install the skill, paste the block. It stays where it was the day you took it.
+This repository is the **snapshot**. It stays where it was the day you took it.
 
-The [**Stream**](https://notlikeus.adorellc.pro/stream) is the live edition: $4.99 a month, one key, every machine you own. Tool defaults change every few weeks. The Stream delivers each rule change to Claude Code, Codex, Cursor, OpenClaw, Hermes, Gemini CLI, and Copilot as it lands, so your work keeps looking like yours. It also licenses commercial use. Pay by card, Apple Pay, Google Pay, Link, US bank debit, Amazon Pay, or USDC, as a subscription or a one-time pass for 1 to 12 months. Agents can buy a 30-day pass in USDC over x402 without a human at the keyboard. Details and the feed reference are in [stream/README.md](stream/README.md).
+The [**Stream**](https://notlikeus.adorellc.pro/subscribe) is the live edition: $4.99 a month, one key, every machine you own. Tool defaults change every few weeks. The Stream delivers each rule change to Claude Code, Codex, Cursor, OpenClaw, Hermes, Gemini CLI, and Copilot as it lands, so your work keeps looking like yours. It also licenses commercial use. Pay by card, Apple Pay, Google Pay, Link, US bank debit, Amazon Pay, or USDC, as a subscription or a one-time pass for 1 to 12 months. Agents can buy a 30-day pass in USDC over x402 without a human at the keyboard. Details and the feed reference are in [stream/README.md](stream/README.md).
 
 ```sh
 npx github:jtc268/not-like-us sync
 ```
 
 That command works without a key. It installs the snapshot into every agent on the machine and shows how far behind the Stream it is.
+
+## The release test
+
+Every model release gets the same six prompts with default settings and no system prompt: a beautiful website, an operations app screen, a poem, a price-increase email, homepage copy, a timeout error. What comes back shows what the model reaches for on its own. A judge model drafts findings against the catalog, a person keeps or rejects each one, and the kept ones become rules with the model's name in their scope.
+
+The prompts are in [suite.json](manual/benchmarks/suite.json) and the runner is `node manual/scripts/release-test.mjs --model <id>`. It works with any OpenAI-compatible endpoint and records each run under `manual/benchmarks/runs`.
 
 ## Install the skill
 
@@ -100,7 +106,7 @@ Each rule has a stable ID, an evidence level, and named sources. The full lists 
 
 ## Limits
 
-This project does not detect AI authorship. A purple gradient, an em dash, or a three-card row proves nothing on its own. Use the catalog to notice clusters of unearned choices and replace them with choices grounded in the actual work.
+This project does not detect AI authorship. A purple gradient on its own proves nothing. Use the catalog to notice clusters of unearned choices and replace them with choices grounded in the actual work.
 
 ## How rules are checked
 
@@ -115,4 +121,4 @@ Each rule has a stable ID, scope, source list, and evidence level:
 
 ## License
 
-Everything here is under the [PolyForm Noncommercial License 1.0.0](LICENSE): free to read, fork, and use for personal, educational, nonprofit, and other noncommercial work. Commercial use comes with a [Stream subscription](https://notlikeus.adorellc.pro/stream). Versions before 2026-09-01 were published under MIT and CC BY 4.0, and copies taken under those terms keep them. Product names belong to their owners, and linked sources keep their own licenses.
+Everything here is under the [PolyForm Noncommercial License 1.0.0](LICENSE): free to read, fork, and use for personal, educational, nonprofit, and other noncommercial work. Commercial use comes with a [Stream subscription](https://notlikeus.adorellc.pro/subscribe). Versions before 2026-09-01 were published under MIT and CC BY 4.0, and copies taken under those terms keep them. Product names belong to their owners, and linked sources keep their own licenses.

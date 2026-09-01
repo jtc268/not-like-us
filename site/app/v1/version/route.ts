@@ -7,7 +7,7 @@ export async function GET() {
       {
         product: current.product,
         price: PRICE_LABEL,
-        subscribe: `${SITE}/stream`,
+        subscribe: `${SITE}/subscribe`,
         stream: {
           version: current.version,
           updated_at: current.updated_at,

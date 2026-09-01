@@ -11,5 +11,5 @@ export async function POST(request: Request) {
 }
 
 export async function GET(request: Request) {
-  return Response.redirect(`${new URL(request.url).origin}/stream`, 303);
+  return Response.redirect(`${new URL(request.url).origin}/subscribe`, 303);
 }

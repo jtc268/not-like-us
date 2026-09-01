@@ -310,7 +310,7 @@ async function sync() {
     if (latest) console.log(`\nLatest change:\n## ${latest.trim()}\n`);
   }
   if (!key) {
-    console.log(`\nThis is the public snapshot. The stream updates continuously and needs a key: ${SITE}/stream`);
+    console.log(`\nThis is the public snapshot. The stream updates continuously and needs a key: ${SITE}/subscribe`);
   }
   if (!state.hooked && !projectMode) {
     console.log(`\nMake it automatic: nlu hook (per session) or nlu schedule (daily).`);
@@ -397,7 +397,7 @@ async function hook() {
   const state = await readState();
   await writeState({ ...state, hooked: true });
   if (!done.length) {
-    console.log('No supported agent found in your home folder. Use nlu schedule instead, or the tool commands at ' + `${SITE}/stream.`);
+    console.log('No supported agent found in your home folder. Use nlu schedule instead, or the tool commands at ' + `${SITE}/subscribe.`);
     return;
   }
   console.log('Session-start hooks installed. Each session re-syncs if the last check is older than 6 hours.');
@@ -554,7 +554,7 @@ async function mcp() {
           ];
           if (cache?.reason) lines.push(`The saved key was rejected: ${cache.reason}`);
           if (method !== 'x402') {
-            lines.push(`Person at a keyboard: open ${SITE}/stream. Subscribe (monthly, cancel any time) or Pay once (1 to 12 months, no renewal). Cards, Apple Pay, Google Pay, Link, US bank debit, Amazon Pay, USDC where enabled. The welcome page shows the key; then run: nlu login <key> && nlu sync.`);
+            lines.push(`Person at a keyboard: open ${SITE}/subscribe. Subscribe (monthly, cancel any time) or Pay once (1 to 12 months, no renewal). Cards, Apple Pay, Google Pay, Link, US bank debit, Amazon Pay, USDC where enabled. The welcome page shows the key; then run: nlu login <key> && nlu sync.`);
           }
           if (method !== 'stripe') {
             lines.push(`Agent with a USDC wallet: GET ${SITE}/v1/x402/pass returns HTTP 402 with x402 payment requirements (USDC on Base). Pay with any x402 client, for example x402-fetch, and the response is JSON with a key and an expiry. Then run: nlu login <key> && nlu sync. Discovery: ${SITE}/.well-known/x402`);
@@ -605,7 +605,7 @@ async function status() {
     const body = await response.json();
     console.log(`Key:       ${response.ok ? `active (${body.status}${body.renewsAt ? `, renews ${body.renewsAt.slice(0, 10)}` : ''})` : body.error}`);
   } else {
-    console.log(`Key:       none. Subscribe at ${SITE}/stream, then nlu login <key>.`);
+    console.log(`Key:       none. Subscribe at ${SITE}/subscribe, then nlu login <key>.`);
   }
   if (state.targets?.length) {
     console.log('Installed in:');
@@ -682,7 +682,7 @@ function help() {
   nlu rotate           replace the key
   nlu uninstall        remove everything nlu wrote
 
-Stream: ${SITE}/stream`);
+Stream: ${SITE}/subscribe`);
 }
 
 const commands = { login, sync, hook, schedule, mcp, status, recover, rotate, uninstall, help };

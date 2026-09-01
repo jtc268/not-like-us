@@ -1,9 +1,9 @@
 # Not Like Us
-> Cited rules for avoiding recognizable AI writing and interface defaults.
+> Rules that make AI work look less the same.
 
 Canonical: https://github.com/jtc268/not-like-us
 Site: https://notlikeus.adorellc.pro
-Stream (paid, live edition): https://notlikeus.adorellc.pro/stream
+Stream (paid, live edition): https://notlikeus.adorellc.pro/subscribe
 Stream feed reference: /stream/README.md
 Public feed version: https://notlikeus.adorellc.pro/v1/version
 Public snapshot feed: https://notlikeus.adorellc.pro/v1/snapshot

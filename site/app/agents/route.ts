@@ -22,7 +22,7 @@ Price: ${PRICE_LABEL} by subscription, or USD 4.99 for a ${PASS_DAYS}-day pass.
 
 ## Pay with a person's card, wallet, or bank
 
-Send the person to ${SITE}/stream. Subscribe (monthly) or Pay once (1 to 12 periods). Stripe Checkout offers cards, Apple Pay, Google Pay, Link, US bank debit, Amazon Pay, and USDC where enabled. The welcome page shows the key.
+Send the person to ${SITE}/subscribe. Subscribe (monthly) or Pay once (1 to 12 periods). Stripe Checkout offers cards, Apple Pay, Google Pay, Link, US bank debit, Amazon Pay, and USDC where enabled. The welcome page shows the key.
 
 ## Use the key
 
@@ -36,7 +36,7 @@ GET ${SITE}/v1/snapshot or ${SITE}/skills/not-like-us/SKILL.md, no key. Same for
 
 ## Terms and contact
 
-${SITE}/stream#terms. Refunds within seven days if the key has not been used. stream@adorellc.pro.
+${SITE}/subscribe#terms. Refunds within seven days if the key has not been used. stream@adorellc.pro.
 
 Machine-readable: ${SITE}/openapi.json (x-payment-info), ${SITE}/.well-known/x402, ${SITE}/llms.txt
 `;

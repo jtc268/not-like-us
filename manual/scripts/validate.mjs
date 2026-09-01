@@ -66,6 +66,8 @@ async function scan(directory) {
   const entries = await readdir(directory, { withFileTypes: true });
   for (const entry of entries) {
     if (['node_modules', '.next', '.vinext', '.git', 'dist', '.wrangler', 'out'].includes(entry.name)) continue;
+    // Recorded model outputs are evidence of the defaults, em dashes included.
+    if (entry.name === 'runs' && directory.pathname.endsWith('/manual/benchmarks/')) continue;
     const location = new URL(entry.name, directory);
     if (entry.isDirectory()) {
       await scan(new URL(`${entry.name}/`, directory));

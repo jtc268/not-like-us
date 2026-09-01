@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import CopyBlock from '../../components/copy-block';
+import ReleaseLedger from '../../components/release-ledger';
 import StreamStatus from '../../components/stream-status';
 import { PRICE_LABEL, SITE } from '../../lib/stream';
 
@@ -16,7 +17,7 @@ export default async function Stream({ searchParams }: { searchParams: Promise<S
     name: 'Not Like Us Stream',
     description: 'Live rules feed for AI writing and interface work. Agents pull the current Not Like Us rules automatically.',
     brand: { '@type': 'Organization', name: 'Adore LLC' },
-    url: `${SITE}/stream`,
+    url: `${SITE}/subscribe`,
     offers: [
       {
         '@type': 'Offer',
@@ -57,7 +58,7 @@ export default async function Stream({ searchParams }: { searchParams: Promise<S
 
       <section className="hero stream-hero" id="top">
         <div className="hero-index" aria-hidden="true">
-          05 / STREAM
+          05 / SUBSCRIBE
         </div>
         <div className="hero-copy">
           <p className="eyebrow">Live rules for AI-assisted work</p>
@@ -67,8 +68,7 @@ export default async function Stream({ searchParams }: { searchParams: Promise<S
             STREAM
           </h1>
           <p className="deck">
-            Tool defaults change every few weeks. The Stream delivers each rule change to Claude Code, Codex, Cursor,
-            OpenClaw, Hermes, Gemini CLI, and Copilot as it lands, so your work keeps looking like yours.
+            Every model release gets the same short test: build a beautiful website, build an app screen, write a poem, write the email. What the model reaches for on its own becomes a rule with its name on it, and your agents get that rule the day it lands.
           </p>
           <StreamStatus />
         </div>
@@ -87,16 +87,37 @@ export default async function Stream({ searchParams }: { searchParams: Promise<S
             </button>
           </form>
           <p className="fine">
-            Cards, Apple Pay, Google Pay, Link, US bank debit, Amazon Pay, and whatever else Stripe offers your
-            country, including USDC where it is enabled. Pay once covers 1 to 12 months at the same price. Agents can pay
-            in USDC over x402.
+            Card, Apple Pay, Google Pay, Link, US bank debit, Amazon Pay, USDC where enabled. Pay once covers 1 to 12 months. Agents pay in USDC over x402.
           </p>
         </aside>
       </section>
 
-      <section className="quick" aria-labelledby="compare-title">
+      <section className="quick" id="test" aria-labelledby="test-title">
         <div className="section-label">
           <span>01</span>
+          <h2 id="test-title">The test</h2>
+          <p>
+            Six prompts, unchanged for every release, default settings, no system prompt. The outputs show what a model
+            does when nobody tells it otherwise. A judge model drafts findings against the catalog. A person keeps or
+            rejects each one before it becomes a rule.
+          </p>
+        </div>
+        <div className="test-body">
+          <ul className="prompt-list">
+            <li>Build a beautiful website</li>
+            <li>Build the first screen of an operations app</li>
+            <li>Write a poem</li>
+            <li>Write the price-increase email</li>
+            <li>Write homepage copy</li>
+            <li>Write a timeout error message</li>
+          </ul>
+          <ReleaseLedger />
+        </div>
+      </section>
+
+      <section className="quick" aria-labelledby="compare-title">
+        <div className="section-label">
+          <span>02</span>
           <h2 id="compare-title">Snapshot or stream</h2>
           <p>The public repository is a snapshot. It is free for noncommercial use and it stays where it was the day you cloned it.</p>
         </div>
@@ -147,7 +168,7 @@ export default async function Stream({ searchParams }: { searchParams: Promise<S
 
       <section className="quick" id="setup" aria-labelledby="setup-title">
         <div className="section-label">
-          <span>02</span>
+          <span>03</span>
           <h2 id="setup-title">Setup</h2>
           <p>
             After checkout you get a key that starts with <code>nlu_</code>. Three commands install and keep it current.
@@ -159,7 +180,7 @@ export default async function Stream({ searchParams }: { searchParams: Promise<S
 
       <section className="quick" aria-labelledby="where-title">
         <div className="section-label">
-          <span>03</span>
+          <span>04</span>
           <h2 id="where-title">Where sync writes</h2>
           <p>Only folders that exist on the machine are touched. Managed blocks are marked and can be removed with uninstall.</p>
         </div>
@@ -203,7 +224,7 @@ export default async function Stream({ searchParams }: { searchParams: Promise<S
 
       <section className="quick" aria-labelledby="auto-title">
         <div className="section-label">
-          <span>04</span>
+          <span>05</span>
           <h2 id="auto-title">Keeping it current</h2>
           <p>
             <code>hook</code> adds a session-start hook to Claude Code, Codex, Cursor, Gemini CLI, and Copilot. It re-syncs
@@ -218,7 +239,7 @@ export default async function Stream({ searchParams }: { searchParams: Promise<S
 
       <section className="quick" aria-labelledby="mcp-title">
         <div className="section-label">
-          <span>05</span>
+          <span>06</span>
           <h2 id="mcp-title">MCP</h2>
           <p>
             The same client runs as a stdio MCP server. Resources for the skill, the paste block, both rule sets, and every
@@ -233,7 +254,7 @@ export default async function Stream({ searchParams }: { searchParams: Promise<S
 
       <section className="quick" aria-labelledby="x402-title">
         <div className="section-label">
-          <span>06</span>
+          <span>07</span>
           <h2 id="x402-title">Agents pay by themselves</h2>
           <p>
             An agent with a USDC wallet does not need you at the keyboard. The pass endpoint answers 402 with x402
@@ -249,7 +270,7 @@ export default async function Stream({ searchParams }: { searchParams: Promise<S
 
       <section className="quick" aria-labelledby="free-title">
         <div className="section-label">
-          <span>07</span>
+          <span>08</span>
           <h2 id="free-title">Try it free first</h2>
           <p>Every command works without a key. It installs the public snapshot and tells you how far behind the stream it is.</p>
         </div>
@@ -258,7 +279,7 @@ export default async function Stream({ searchParams }: { searchParams: Promise<S
 
       <section className="method" id="manage">
         <div className="section-label">
-          <span>08</span>
+          <span>09</span>
           <h2>Billing and keys</h2>
           <p>
             {recovered
@@ -285,7 +306,7 @@ export default async function Stream({ searchParams }: { searchParams: Promise<S
 
       <section className="method" id="terms">
         <div className="section-label">
-          <span>09</span>
+          <span>10</span>
           <h2>Terms</h2>
           <p>Plain language. The Stripe receipt and the billing portal are the record.</p>
         </div>

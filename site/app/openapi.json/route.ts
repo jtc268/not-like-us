@@ -19,8 +19,8 @@ export async function GET() {
         title: 'Not Like Us Stream',
         version: '1.0.0',
         description: `Live rules feed for AI writing and interface work. ${PRICE_LABEL} by subscription, or a ${PASS_DAYS}-day pass. Agents pay USDC over x402 at ${RESOURCE_URL}.`,
-        contact: { email: 'stream@adorellc.pro', url: `${SITE}/stream` },
-        termsOfService: `${SITE}/stream#terms`,
+        contact: { email: 'stream@adorellc.pro', url: `${SITE}/subscribe` },
+        termsOfService: `${SITE}/subscribe#terms`,
       },
       servers: [{ url: SITE }],
       'x-payment-info': {
