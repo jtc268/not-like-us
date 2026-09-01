@@ -117,7 +117,7 @@ Each rule has a stable ID, scope, source list, and evidence level:
 - **Corroborated:** more than one independent source reports the same pattern.
 - **Hypothesis:** useful enough to test, not strong enough to state as fact.
 
-`node manual/scripts/validate.mjs` checks the rule data, checks every cited link against the source ledger, and scans every file for em dashes. `node manual/scripts/research-radar.mjs` fetches each source and records changed hashes in [radar.json](manual/data/radar.json). Run both before changing a rule. A person approves any guidance change.
+`node manual/scripts/validate.mjs` checks the rule data, checks every cited link against the source ledger, and scans every file for em dashes. It also runs inside every site build, so nothing ships without it. `node manual/scripts/research-radar.mjs` fetches each source and records changed hashes in [radar.json](manual/data/radar.json). Run it before changing a rule. A person approves any guidance change.
 
 ## License
 

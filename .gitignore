@@ -14,6 +14,5 @@
 *.pem
 npm-debug.log*
 
-# GitHub Actions workflows stay local until a token with the workflow scope pushes them.
-# To publish: gh auth refresh -s workflow, delete this rule, then git add .github/workflows.
-/.github/workflows/
+# ship.sh artifacts
+/out/

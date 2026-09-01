@@ -1,5 +1,7 @@
 # Not Like Us release runbook
 
+The short version: `NAS_PASSWORD=... bash site/deploy/ship.sh` does everything below in one go and stops at the first failure. The rest of this file is what it does, for when something needs doing by hand.
+
 How a release of the site reaches https://notlikeus.adorellc.pro. Every step here has been run and works as written on 2026-09-01. Run from the repository root on a machine with Docker, Node 22, Python 3 with paramiko, and LAN access to Meadowfire (192.168.1.38).
 
 ## Inputs

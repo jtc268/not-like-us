@@ -1,0 +1,93 @@
+#!/usr/bin/env bash
+# Ship the current commit to Meadowfire in one command.
+#
+#   NAS_PASSWORD='...' bash site/deploy/ship.sh
+#
+# Needs: Docker, Node 22, Python 3 with paramiko, the secrets file at
+# ~/.config/not-like-us/notlikeus.env, and LAN access to 192.168.1.38.
+# Does, in order: validate, build the image (its test stage runs lint and
+# build), smoke it locked down, package it, upload it, load it with the id
+# Meadowfire assigns, apply, commit, finalize, verify the public site, and
+# append the operations log. Stops at the first failure.
+set -euo pipefail
+
+ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
+cd "$ROOT"
+ENV_FILE="${NLU_ENV:-$HOME/.config/not-like-us/notlikeus.env}"
+[ -f "$ENV_FILE" ] || { echo "missing $ENV_FILE"; exit 1; }
+[ -n "${NAS_PASSWORD:-}" ] || { echo "set NAS_PASSWORD"; exit 1; }
+export MSYS_NO_PATHCONV=1
+N="python $ROOT/site/deploy/nas.py"
+D=/var/packages/ContainerManager/target/usr/bin/docker
+SHA=$(git rev-parse HEAD)
+RELEASE=${SHA:0:12}
+IMAGE="local/adore-exp-notlikeus:$RELEASE"
+OUT="$ROOT/out/deploy-$RELEASE"
+mkdir -p "$OUT"
+step() { printf '\n== %s\n' "$*"; }
+
+step "validate"
+node manual/scripts/validate.mjs
+[ -z "$(git status --porcelain)" ] || echo "note: working tree has uncommitted changes; the image is built from the tree, the release id from HEAD ($RELEASE)"
+
+step "build $IMAGE (test stage runs lint and build)"
+docker build --platform linux/amd64 -t "$IMAGE" -f site/Containerfile . > "$OUT/docker-build.out" 2>&1 || { tail -30 "$OUT/docker-build.out"; exit 1; }
+LOCAL_ID=$(docker image inspect "$IMAGE" --format '{{.Id}}')
+
+step "smoke, locked down"
+docker rm -f nlu-ship-smoke >/dev/null 2>&1 || true
+docker run -d --name nlu-ship-smoke --read-only --cap-drop ALL --security-opt no-new-privileges:true --tmpfs /tmp:size=64m,mode=1777 --env-file "$ENV_FILE" -e ADORE_RELEASE="$RELEASE" -e PORT=8080 -p 127.0.0.1:18080:8080 "$IMAGE" >/dev/null
+for i in $(seq 1 60); do curl -s -m 3 http://127.0.0.1:18080/healthz | grep -q "\"$RELEASE\"" && break; sleep 2; [ "$i" = 60 ] && { docker logs nlu-ship-smoke | tail -20; exit 1; }; done
+SOURCE=$(curl -s -m 60 http://127.0.0.1:18080/v1/version | node -e "let s='';process.stdin.on('data',d=>s+=d).on('end',()=>console.log(JSON.parse(s).stream.source))")
+X402=$(curl -s -o /dev/null -w '%{http_code}' -m 30 http://127.0.0.1:18080/v1/x402/pass)
+SUB=$(curl -s -o /dev/null -w '%{http_code}' -m 30 http://127.0.0.1:18080/subscribe)
+docker rm -f nlu-ship-smoke >/dev/null
+echo "healthz ok, stream source=$SOURCE, x402=$X402, subscribe=$SUB"
+[ "$SOURCE" = stream ] || { echo "stream source is $SOURCE, outbound TLS or source token is broken"; exit 1; }
+[ "$X402" = 402 ] && [ "$SUB" = 200 ] || exit 1
+
+step "package"
+docker save "$IMAGE" | gzip -1 > "$OUT/image.tar.gz"
+rm -f "$OUT"/image.tar.gz.part-*
+(cd "$OUT" && split -b 20m image.tar.gz image.tar.gz.part- && sha256sum image.tar.gz.part-* > chunks.sha256)
+ARCHIVE_SHA="sha256:$(sha256sum "$OUT/image.tar.gz" | cut -d' ' -f1)"
+printf '%s\n' "docker build --platform linux/amd64 -t $IMAGE -f site/Containerfile ." "PASS" "image_id=$LOCAL_ID" > "$OUT/build.log"
+printf '%s\n' "validate: PASS" "image test stage (lint, build): PASS" "locked-down smoke: healthz $RELEASE, stream source $SOURCE, x402 $X402, subscribe $SUB" > "$OUT/test.log"
+echo "archive $ARCHIVE_SHA, $(ls "$OUT"/image.tar.gz.part-* | wc -l) chunks"
+
+step "upload to Meadowfire"
+$N sudo "scripts/experiment-runtime.sh artifact-stage notlikeus $RELEASE" >/dev/null
+$N run "mkdir -p .staging/notlikeus/$RELEASE && chmod 700 .staging/notlikeus/$RELEASE"
+for f in "$OUT"/image.tar.gz.part-* "$OUT/chunks.sha256"; do $N put "$f" "/volume7/docker/adore-fabric/.staging/artifacts/notlikeus/$RELEASE/$(basename "$f")" >/dev/null; done
+$N run "cd .staging/artifacts/notlikeus/$RELEASE && sha256sum -c chunks.sha256 >/dev/null && echo chunks verified"
+
+step "load with the id Meadowfire assigns"
+$N sudo "scripts/experiment-runtime.sh artifact-load notlikeus $RELEASE $ARCHIVE_SHA $IMAGE $LOCAL_ID" >/dev/null 2>&1 || true
+NAS_ID=$($N sudo "$D image inspect $IMAGE --format '{{.Id}}'" | tr -d '\r')
+[ "$NAS_ID" = "$LOCAL_ID" ] || { $N sudo "scripts/experiment-runtime.sh artifact-load notlikeus $RELEASE $ARCHIVE_SHA $IMAGE $NAS_ID" | grep -q '"ok": true'; echo "loaded_image_id=$NAS_ID" >> "$OUT/build.log"; }
+echo "image id on Meadowfire $NAS_ID"
+
+step "candidate"
+node site/deploy/mkcandidate.mjs "$OUT" "$RELEASE" "$SHA" "$NAS_ID" "$ARCHIVE_SHA" "sha256:$(sha256sum "$OUT/build.log" | cut -d' ' -f1)" "sha256:$(sha256sum "$OUT/test.log" | cut -d' ' -f1)" >/dev/null
+(cd "$OUT" && rm -f candidate.tar.gz && tar -czf candidate.tar.gz -C candidate compose.yaml meadowfire.caddy metadata.json)
+for f in candidate.tar.gz build.log test.log; do $N put "$OUT/$f" "/volume7/docker/adore-fabric/.staging/notlikeus/$RELEASE/$f" >/dev/null; done
+$N sudo 'bin/adore doctor --json > /tmp/doc.json' || { echo "platform doctor is red; see site/deploy/RUNBOOK.md (doctor.py expectations, stale lock)"; $N sudo 'jq -c "[.checks | to_entries[] | select(.value != true) | .key]" /tmp/doc.json'; exit 1; }
+
+step "apply, commit, finalize"
+APPLY=$($N sudo "scripts/experiment-runtime.sh apply notlikeus $RELEASE < .staging/notlikeus/$RELEASE/candidate.tar.gz" 2>&1)
+TXID=$(printf '%s' "$APPLY" | node -e "let s='';process.stdin.on('data',d=>s+=d).on('end',()=>{const m=s.match(/\"txid\":\s*\"([^\"]+)\"/);console.log(m?m[1]:'')})")
+[ -n "$TXID" ] || { printf '%s\n' "$APPLY" | grep -vE '^\{"level"' | tail -15; exit 1; }
+$N sudo "scripts/experiment-runtime.sh commit $TXID" | grep -q '"phase": "committed"'
+$N sudo "scripts/experiment-runtime.sh finalize $TXID" | grep -q '"phase": "finalized"'
+
+step "verify public"
+LIVE=$(curl -s -m 20 https://notlikeus.adorellc.pro/healthz)
+echo "$LIVE"
+printf '%s' "$LIVE" | grep -q "\"$RELEASE\"" || exit 1
+
+step "operations log"
+printf '\n## %s | Not Like Us release %s\n\n- Actor: ship.sh for husky.\n- Source: https://github.com/jtc268/not-like-us commit %s.\n- Image %s, id on Meadowfire %s, transaction %s.\n- Verification: validate, image test stage, locked-down smoke (stream source, x402, subscribe), apply stages, public healthz.\n- Rollback: sudo /volume7/docker/adore-fabric/scripts/experiment-runtime.sh rollback %s\n' "$(date -u +%Y-%m-%dT%H:%M:%SZ)" "$RELEASE" "$SHA" "$IMAGE" "$NAS_ID" "$TXID" "$TXID" > "$OUT/ops-entry.md"
+$N put "$OUT/ops-entry.md" "/volume7/docker/adore-fabric/.staging/ops-entry-notlikeus.md" >/dev/null
+$N run 'cat .staging/ops-entry-notlikeus.md >> .staging/OPERATIONS_LOG.notlikeus.md && rm .staging/ops-entry-notlikeus.md'
+echo
+echo "shipped $RELEASE (transaction $TXID)"
