@@ -18,8 +18,8 @@ ENV_FILE="${NLU_ENV:-$HOME/.config/not-like-us/notlikeus.env}"
 # Docker on Windows needs a native path; Git Bash gives a POSIX one.
 ENV_FILE_NATIVE=$(cygpath -w "$ENV_FILE" 2>/dev/null || echo "$ENV_FILE")
 [ -n "${NAS_PASSWORD:-}" ] || { echo "set NAS_PASSWORD"; exit 1; }
-export MSYS_NO_PATHCONV=1
-N="python $ROOT/site/deploy/nas.py"
+# Only the NAS helper gets raw POSIX paths; everything else (curl -o, docker) keeps Git Bash path conversion.
+N="env MSYS_NO_PATHCONV=1 python $ROOT/site/deploy/nas.py"
 D=/var/packages/ContainerManager/target/usr/bin/docker
 SHA=$(git rev-parse HEAD)
 RELEASE=${SHA:0:12}
