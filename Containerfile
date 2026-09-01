@@ -26,8 +26,10 @@ RUN groupadd --gid 10001 notlikeus \
 COPY --from=build --chown=10001:10001 /app/dist ./dist
 COPY --from=build --chown=10001:10001 /app/node_modules ./node_modules
 COPY --from=build --chown=10001:10001 /app/package.json ./package.json
+RUN ln -s /tmp/miniflare /app/node_modules/.mf \
+    && ln -s /tmp/wrangler /app/dist/server/.wrangler
 
 USER 10001:10001
 EXPOSE 8080
 HEALTHCHECK --interval=20s --timeout=5s --start-period=15s --retries=3 CMD ["node", "-e", "fetch('http://127.0.0.1:8080/healthz').then(r=>r.json()).then(x=>{if(x.status!=='ok')process.exit(1)}).catch(()=>process.exit(1))"]
-CMD ["sh", "-c", "exec ./node_modules/.bin/wrangler dev --ip 0.0.0.0 --port 8080 --config dist/server/wrangler.json --var ADORE_RELEASE:${ADORE_RELEASE} --show-interactive-dev-session=false"]
+CMD ["sh", "-c", "mkdir -p /tmp/miniflare /tmp/wrangler && exec ./node_modules/.bin/wrangler dev --ip 0.0.0.0 --port 8080 --config dist/server/wrangler.json --var ADORE_RELEASE:${ADORE_RELEASE} --show-interactive-dev-session=false"]
