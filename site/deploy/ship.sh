@@ -15,6 +15,8 @@ ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
 cd "$ROOT"
 ENV_FILE="${NLU_ENV:-$HOME/.config/not-like-us/notlikeus.env}"
 [ -f "$ENV_FILE" ] || { echo "missing $ENV_FILE"; exit 1; }
+# Docker on Windows needs a native path; Git Bash gives a POSIX one.
+ENV_FILE_NATIVE=$(cygpath -w "$ENV_FILE" 2>/dev/null || echo "$ENV_FILE")
 [ -n "${NAS_PASSWORD:-}" ] || { echo "set NAS_PASSWORD"; exit 1; }
 export MSYS_NO_PATHCONV=1
 N="python $ROOT/site/deploy/nas.py"
@@ -36,7 +38,7 @@ LOCAL_ID=$(docker image inspect "$IMAGE" --format '{{.Id}}')
 
 step "smoke, locked down"
 docker rm -f nlu-ship-smoke >/dev/null 2>&1 || true
-docker run -d --name nlu-ship-smoke --read-only --cap-drop ALL --security-opt no-new-privileges:true --tmpfs /tmp:size=64m,mode=1777 --env-file "$ENV_FILE" -e ADORE_RELEASE="$RELEASE" -e PORT=8080 -p 127.0.0.1:18080:8080 "$IMAGE" >/dev/null
+docker run -d --name nlu-ship-smoke --read-only --cap-drop ALL --security-opt no-new-privileges:true --tmpfs /tmp:size=64m,mode=1777 --env-file "$ENV_FILE_NATIVE" -e ADORE_RELEASE="$RELEASE" -e PORT=8080 -p 127.0.0.1:18080:8080 "$IMAGE" >/dev/null
 for i in $(seq 1 60); do curl -s -m 3 http://127.0.0.1:18080/healthz | grep -q "\"$RELEASE\"" && break; sleep 2; [ "$i" = 60 ] && { docker logs nlu-ship-smoke | tail -20; exit 1; }; done
 SOURCE=$(curl -s -m 60 http://127.0.0.1:18080/v1/version | node -e "let s='';process.stdin.on('data',d=>s+=d).on('end',()=>console.log(JSON.parse(s).stream.source))")
 X402=$(curl -s -o /dev/null -w '%{http_code}' -m 30 http://127.0.0.1:18080/v1/x402/pass)
