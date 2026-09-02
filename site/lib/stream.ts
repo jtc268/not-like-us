@@ -14,7 +14,7 @@ import snapshotDesign from '../../manual/rules/DESIGN.md?raw';
 // Every per-tool guide in the public snapshot, keyed by repository path.
 const snapshotGuides = import.meta.glob('../../manual/tools/*/*.md', { query: '?raw', import: 'default', eager: true }) as Record<string, string>;
 
-export const SITE = 'https://notlikeus.adorellc.pro';
+export const SITE = 'https://notlikeus.art';
 export const PRODUCT = 'not-like-us-stream';
 export const PRICE_LABEL = '$4.99 a month';
 

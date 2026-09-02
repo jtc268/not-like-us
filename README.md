@@ -4,13 +4,13 @@
 
 A field manual for keeping AI-assisted writing and interfaces from looking like everyone else's.
 
-Read it at [notlikeus.adorellc.pro](https://notlikeus.adorellc.pro). Free to fork and use for noncommercial work. If it saved you from another purple gradient, [buy me a coffee](https://buymeacoffee.com/refresh1).
+Read it at [notlikeus.art](https://notlikeus.art). Free to fork and use for noncommercial work. If it saved you from another purple gradient, [buy me a coffee](https://buymeacoffee.com/refresh1).
 
 ## Two editions
 
 This repository is the **snapshot**. It stays where it was the day you took it.
 
-The [**Stream**](https://notlikeus.adorellc.pro/subscribe) is the live edition: $4.99 a month, one key, every machine you own. Tool defaults change every few weeks. The Stream delivers each rule change to Claude Code, Codex, Cursor, OpenClaw, Hermes, Gemini CLI, and Copilot as it lands, so your work keeps looking like yours. It also licenses commercial use. Pay by card, Apple Pay, Google Pay, Link, US bank debit, Amazon Pay, or USDC, as a subscription or a one-time pass for 1 to 12 months. Agents can buy a 30-day pass in USDC over x402 without a human at the keyboard. Details and the feed reference are in [stream/README.md](stream/README.md).
+The [**Stream**](https://notlikeus.art/subscribe) is the live edition: $4.99 a month, one key, every machine you own. Tool defaults change every few weeks. The Stream delivers each rule change to Claude Code, Codex, Cursor, OpenClaw, Hermes, Gemini CLI, and Copilot as it lands, so your work keeps looking like yours. It also licenses commercial use. Pay by card, Apple Pay, Google Pay, Link, US bank debit, Amazon Pay, or USDC, as a subscription or a one-time pass for 1 to 12 months. Agents can buy a 30-day pass in USDC over x402 without a human at the keyboard. Details and the feed reference are in [stream/README.md](stream/README.md).
 
 ```sh
 npx github:jtc268/not-like-us sync
@@ -121,4 +121,4 @@ Each rule has a stable ID, scope, source list, and evidence level:
 
 ## License
 
-Everything here is under the [PolyForm Noncommercial License 1.0.0](LICENSE): free to read, fork, and use for personal, educational, nonprofit, and other noncommercial work. Commercial use comes with a [Stream subscription](https://notlikeus.adorellc.pro/subscribe). Versions before 2026-09-01 were published under MIT and CC BY 4.0, and copies taken under those terms keep them. Product names belong to their owners, and linked sources keep their own licenses.
+Everything here is under the [PolyForm Noncommercial License 1.0.0](LICENSE): free to read, fork, and use for personal, educational, nonprofit, and other noncommercial work. Commercial use comes with a [Stream subscription](https://notlikeus.art/subscribe). Versions before 2026-09-01 were published under MIT and CC BY 4.0, and copies taken under those terms keep them. Product names belong to their owners, and linked sources keep their own licenses.

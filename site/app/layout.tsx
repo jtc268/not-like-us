@@ -17,7 +17,7 @@ const mono = IBM_Plex_Mono({
 export const metadata: Metadata = {
   title: 'Not Like Us | Anti-default field manual',
   description: 'Rules that make AI work look less the same.',
-  metadataBase: new URL('https://notlikeus.adorellc.pro'),
+  metadataBase: new URL('https://notlikeus.art'),
   icons: {
     icon: [
       { url: '/favicon.svg', type: 'image/svg+xml' },
