@@ -17,7 +17,8 @@ type Rule = {
 
 type Source = { id: string; title: string; displayTitle?: string; publisher: string; url: string };
 type Tool = { id: string; name: string };
-const stamp = new Intl.DateTimeFormat('en-US', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' });
+const reviewStamp = new Intl.DateTimeFormat('en-US', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' });
+const sourceStamp = new Intl.DateTimeFormat('en-US', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'America/New_York' });
 
 function RuleList({ rules, sourceById }: { rules: Rule[]; sourceById: Map<string, Source> }) {
   return (
@@ -27,7 +28,7 @@ function RuleList({ rules, sourceById }: { rules: Rule[]; sourceById: Map<string
           <header>
             <span>{rule.id}</span>
             <span>{rule.group}</span>
-            <time dateTime={rule.reviewed}>Reviewed {stamp.format(new Date(`${rule.reviewed}T00:00:00Z`))}</time>
+            <time dateTime={rule.reviewed}>Reviewed {reviewStamp.format(new Date(`${rule.reviewed}T00:00:00Z`))}</time>
             <b>{rule.evidence}</b>
           </header>
           <h3>{rule.title}</h3>
@@ -119,7 +120,7 @@ export default function RuleExplorer({ rules, sources, tools, checkedAt }: { rul
           <span>
             {matches.length} {matches.length === 1 ? 'rule' : 'rules'}
           </span>
-          <small>Sources checked {stamp.format(new Date(checkedAt))}</small>
+          <small>Sources checked {sourceStamp.format(new Date(checkedAt))}</small>
         </output>
       </div>
 
