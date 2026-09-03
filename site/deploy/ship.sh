@@ -95,10 +95,28 @@ TXID=$(printf '%s' "$APPLY" | node -e "let s='';process.stdin.on('data',d=>s+=d)
 $N sudo "scripts/experiment-runtime.sh commit $TXID" | grep -q '"phase": "committed"'
 $N sudo "scripts/experiment-runtime.sh finalize $TXID" | grep -q '"phase": "finalized"'
 
+step "point notlikeus.art at $RELEASE"
+cat > "$OUT/notlikeus-art.caddy" <<EOF
+@exp_notlikeus_art host notlikeus.art
+handle @exp_notlikeus_art {
+  reverse_proxy exp-notlikeus-$RELEASE:8080
+}
+
+@exp_notlikeus_art_www host www.notlikeus.art
+handle @exp_notlikeus_art_www {
+  redir https://notlikeus.art{uri} permanent
+}
+EOF
+nput "$OUT/notlikeus-art.caddy" "/volume7/docker/adore-fabric/.staging/notlikeus-art.caddy" >/dev/null
+$N sudo "install -m 0644 .staging/notlikeus-art.caddy experiments/generated/caddy-meadowfire/notlikeus-art.caddy && $D exec adore-edge caddy validate --config /etc/caddy/Caddyfile && $D exec adore-edge caddy reload --config /etc/caddy/Caddyfile" >/dev/null
+
 step "verify public"
-LIVE=$(curl -s -m 20 https://notlikeus.adorellc.pro/healthz)
-echo "$LIVE"
-printf '%s' "$LIVE" | grep -q "\"$RELEASE\"" || exit 1
+LIVE_OLD=$(curl -s -m 20 https://notlikeus.adorellc.pro/healthz)
+LIVE_APEX=$(curl -s -m 20 https://notlikeus.art/healthz)
+echo "$LIVE_OLD"
+echo "$LIVE_APEX"
+printf '%s' "$LIVE_OLD" | grep -q "\"$RELEASE\"" || exit 1
+printf '%s' "$LIVE_APEX" | grep -q "\"$RELEASE\"" || exit 1
 
 step "operations log"
 printf '\n## %s | Not Like Us release %s\n\n- Actor: ship.sh for husky.\n- Source: https://github.com/jtc268/not-like-us commit %s.\n- Image %s, id on Meadowfire %s, transaction %s.\n- Verification: validate, image test stage, locked-down smoke (stream source, x402, subscribe), apply stages, public healthz.\n- Rollback: sudo /volume7/docker/adore-fabric/scripts/experiment-runtime.sh rollback %s\n' "$(date -u +%Y-%m-%dT%H:%M:%SZ)" "$RELEASE" "$SHA" "$IMAGE" "$NAS_ID" "$TXID" "$TXID" > "$OUT/ops-entry.md"

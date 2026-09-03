@@ -40,10 +40,9 @@ export default function Home() {
           </h1>
           <p className="deck">Rules that make AI work look less the same.</p>
         </div>
-        <aside className="hero-note">
+        <aside className="hero-note edition-note">
           <span>Current edition</span>
           <strong>SEP 2026</strong>
-          <p>Every rule has a source and a fix.</p>
         </aside>
       </section>
 
@@ -96,7 +95,8 @@ export default function Home() {
           <span>04</span>
           <h2 id="stream-title">Stream</h2>
           <p>
-            This page is a snapshot. Every model release gets the same test, and what it does by default becomes a rule. The Stream keeps your agents on the current rules.
+            This page is a snapshot. A daily release monitor tests newly callable models. Subscribers&apos; agents sync
+            each rule after review.
           </p>
         </div>
         <div className="stream-offer">

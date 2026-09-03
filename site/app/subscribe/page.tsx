@@ -68,7 +68,9 @@ export default async function Stream({ searchParams }: { searchParams: Promise<S
             STREAM
           </h1>
           <p className="deck">
-            Every model release gets the same short test: build a beautiful website, build an app screen, write a poem, write the email. What the model reaches for on its own becomes a rule with its name on it, and your agents get that rule the day it lands.
+            A daily release monitor checks major model catalogs. When a new model is callable, it gets the same six
+            tests at default settings with no system prompt. After review, the new rules sync to subscribers&apos; agents
+            so that model&apos;s defaults do not become their house style.
           </p>
           <StreamStatus />
         </div>
@@ -97,9 +99,9 @@ export default async function Stream({ searchParams }: { searchParams: Promise<S
           <span>01</span>
           <h2 id="test-title">The test</h2>
           <p>
-            Six prompts, unchanged for every release, default settings, no system prompt. The outputs show what a model
-            does when nobody tells it otherwise. A judge model drafts findings against the catalog. A person keeps or
-            rejects each one before it becomes a rule.
+            The monitor checks for new models every day. A newly callable model gets the six prompts below, unchanged,
+            at default settings with no system prompt. A judge model drafts findings against the catalog, then a person
+            approves or rejects each finding before it can ship.
           </p>
         </div>
         <div className="test-body">
