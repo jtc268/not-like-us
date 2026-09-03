@@ -43,11 +43,32 @@
     "id": "anthropic-opus-style",
     "type": "official",
     "title": "Prompting Claude Opus 4.8",
+    "displayTitle": "Claude visual style guidance",
     "publisher": "Anthropic",
     "url": "https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-opus-4-8",
     "accessed": "2026-09-01",
     "weight": "primary",
     "notes": "Documents Claude's cream background near #F4F1EA, serif display type, italic accent words, and terracotta or amber house style."
+  },
+  {
+    "id": "anthropic-current-prompting",
+    "type": "official",
+    "title": "Prompting best practices",
+    "publisher": "Anthropic",
+    "url": "https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices",
+    "accessed": "2026-09-02",
+    "weight": "primary",
+    "notes": "Anthropic's current prompting reference for Claude Fable 5.1, Claude Opus 5, Claude Sonnet 5, and other active models."
+  },
+  {
+    "id": "anthropic-release-notes",
+    "type": "official",
+    "title": "Claude Platform release notes",
+    "publisher": "Anthropic",
+    "url": "https://platform.claude.com/docs/en/release-notes/overview",
+    "accessed": "2026-09-02",
+    "weight": "primary",
+    "notes": "Release feed used by the daily model monitor. Claude Fable 5.1 launched on September 1, 2026."
   },
   {
     "id": "anthropic-prompt-overview",

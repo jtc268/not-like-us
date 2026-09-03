@@ -1,14 +1,14 @@
 {
-  "generatedAt": "2026-09-01T19:35:37.045Z",
+  "generatedAt": "2026-09-03T01:08:05.865Z",
   "sources": [
     {
       "id": "openai-frontend",
       "status": 200,
       "finalUrl": "https://developers.openai.com/api/docs/guides/frontend-prompt",
-      "etag": "W/\"b3bb802e18ba563b7c50f1cd169fd560\"",
-      "lastModified": "Tue, 01 Sep 2026 19:01:46 GMT",
-      "contentHash": "2af180e30305f25b",
-      "checkedAt": "2026-09-01T19:35:30.624Z"
+      "etag": "W/\"a379fc07a2b534f07b4f182b52c20f91\"",
+      "lastModified": "Wed, 02 Sep 2026 22:48:48 GMT",
+      "contentHash": "b9115680204e59f0",
+      "checkedAt": "2026-09-03T01:07:58.550Z"
     },
     {
       "id": "openai-latest",
@@ -16,26 +16,26 @@
       "finalUrl": "https://developers.openai.com/api/docs/guides/latest-model",
       "etag": null,
       "lastModified": null,
-      "contentHash": "e07b1f96b32e6d47",
-      "checkedAt": "2026-09-01T19:35:30.730Z"
+      "contentHash": "7605ff9c7715156d",
+      "checkedAt": "2026-09-03T01:07:58.695Z"
     },
     {
       "id": "openai-prompt-engineering",
       "status": 200,
       "finalUrl": "https://developers.openai.com/api/docs/guides/prompt-engineering",
-      "etag": "W/\"1066fb2b8d8a88e50eec6bd3a57a1e25\"",
-      "lastModified": "Tue, 01 Sep 2026 18:57:39 GMT",
-      "contentHash": "9e241670857b3635",
-      "checkedAt": "2026-09-01T19:35:30.943Z"
+      "etag": "W/\"5559b97e8b2b171c043e519f94b721ae\"",
+      "lastModified": "Wed, 02 Sep 2026 22:39:03 GMT",
+      "contentHash": "568f34f1ef3c3654",
+      "checkedAt": "2026-09-03T01:07:58.808Z"
     },
     {
       "id": "openai-image-generation",
       "status": 200,
       "finalUrl": "https://developers.openai.com/api/docs/guides/image-generation",
-      "etag": "W/\"da0ef9e8fbe3d3cfb792cb0095ba7893\"",
-      "lastModified": "Tue, 01 Sep 2026 18:58:38 GMT",
-      "contentHash": "ef1517be3cce2d10",
-      "checkedAt": "2026-09-01T19:35:31.035Z"
+      "etag": "W/\"ebcb3bbcbee5e60ac3685fdb39984bbb\"",
+      "lastModified": "Wed, 02 Sep 2026 22:40:55 GMT",
+      "contentHash": "563822f002699ab7",
+      "checkedAt": "2026-09-03T01:07:58.924Z"
     },
     {
       "id": "anthropic-opus-style",
@@ -43,8 +43,26 @@
       "finalUrl": "https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-opus-4-8",
       "etag": null,
       "lastModified": null,
-      "contentHash": "dce8ebd203274335",
-      "checkedAt": "2026-09-01T19:35:31.353Z"
+      "contentHash": "f4d4847dac23710e",
+      "checkedAt": "2026-09-03T01:07:59.234Z"
+    },
+    {
+      "id": "anthropic-current-prompting",
+      "status": 200,
+      "finalUrl": "https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices",
+      "etag": null,
+      "lastModified": null,
+      "contentHash": "c9c6ab764d6960cf",
+      "checkedAt": "2026-09-03T01:07:59.611Z"
+    },
+    {
+      "id": "anthropic-release-notes",
+      "status": 200,
+      "finalUrl": "https://platform.claude.com/docs/en/release-notes/overview",
+      "etag": null,
+      "lastModified": null,
+      "contentHash": "64b0c257be8799d0",
+      "checkedAt": "2026-09-03T01:07:59.903Z"
     },
     {
       "id": "anthropic-prompt-overview",
@@ -52,17 +70,17 @@
       "finalUrl": "https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/overview",
       "etag": null,
       "lastModified": null,
-      "contentHash": "0f952844f8b17bf3",
-      "checkedAt": "2026-09-01T19:35:31.809Z"
+      "contentHash": "e265fb8741024fdf",
+      "checkedAt": "2026-09-03T01:08:00.269Z"
     },
     {
       "id": "gemini-prompting",
       "status": 200,
-      "finalUrl": "https://ai.google.dev/gemini-api/docs/prompting-strategies?hl=ar",
+      "finalUrl": "https://ai.google.dev/gemini-api/docs/prompting-strategies",
       "etag": null,
-      "lastModified": "Wed, 10 Jun 2026 07:57:45 GMT",
-      "contentHash": "6ce447e703d74bf5",
-      "checkedAt": "2026-09-01T19:35:32.623Z"
+      "lastModified": "Wed, 10 Jun 2026 04:18:33 GMT",
+      "contentHash": "0bcd22e67bf175a5",
+      "checkedAt": "2026-09-03T01:08:00.657Z"
     },
     {
       "id": "material-design",
@@ -71,7 +89,7 @@
       "etag": "W/\"82e2ada8b8b07a7cc56e050503c569e6\"",
       "lastModified": "Tue, 01 Jan 1980 00:00:01 GMT",
       "contentHash": "918b8c8af255c380",
-      "checkedAt": "2026-09-01T19:35:32.747Z"
+      "checkedAt": "2026-09-03T01:08:00.784Z"
     },
     {
       "id": "lovable-design",
@@ -79,8 +97,8 @@
       "finalUrl": "https://docs.lovable.dev/features/design-guidance",
       "etag": null,
       "lastModified": null,
-      "contentHash": "b9e094aeb6e37690",
-      "checkedAt": "2026-09-01T19:35:32.866Z"
+      "contentHash": "1cf760b02276621b",
+      "checkedAt": "2026-09-03T01:08:00.932Z"
     },
     {
       "id": "lovable-design-systems",
@@ -88,26 +106,26 @@
       "finalUrl": "https://docs.lovable.dev/features/design-systems",
       "etag": null,
       "lastModified": null,
-      "contentHash": "2bd4e97322fd9de8",
-      "checkedAt": "2026-09-01T19:35:32.959Z"
+      "contentHash": "480019fa7ada79c4",
+      "checkedAt": "2026-09-03T01:08:01.056Z"
     },
     {
       "id": "v0-systems",
       "status": 200,
       "finalUrl": "https://v0.app/docs/design-systems-legacy",
-      "etag": "W/\"9ed9aac812e0732aae24f984df443053\"",
+      "etag": "W/\"a24028c0ab05855061f2cfd55bd13176\"",
       "lastModified": null,
-      "contentHash": "e0b43bdb5c570cb1",
-      "checkedAt": "2026-09-01T19:35:33.218Z"
+      "contentHash": "97db597b29879093",
+      "checkedAt": "2026-09-03T01:08:01.280Z"
     },
     {
       "id": "v0-design-systems-2",
       "status": 200,
       "finalUrl": "https://v0.app/docs/design-systems-2",
-      "etag": "W/\"7b0ca1425c0eb98f68e032a4a08abb05\"",
+      "etag": "W/\"a2197ee85067df8d17cd592740af816f\"",
       "lastModified": null,
-      "contentHash": "6dcb8cc49ad29c66",
-      "checkedAt": "2026-09-01T19:35:33.282Z"
+      "contentHash": "97881c0cdef62887",
+      "checkedAt": "2026-09-03T01:08:01.372Z"
     },
     {
       "id": "gamma-cards",
@@ -115,8 +133,8 @@
       "finalUrl": "https://gamma.app/explore/content/guides/how-gamma-maps-content-directly-to-slides-using-its-card-system",
       "etag": null,
       "lastModified": null,
-      "contentHash": "0c5c18b139a01592",
-      "checkedAt": "2026-09-01T19:35:33.424Z"
+      "contentHash": "db10711d5fe26377",
+      "checkedAt": "2026-09-03T01:08:01.477Z"
     },
     {
       "id": "replit-design-mode",
@@ -124,8 +142,8 @@
       "finalUrl": "https://replit.com/blog/design-mode",
       "etag": null,
       "lastModified": null,
-      "contentHash": "881c3f442f667495",
-      "checkedAt": "2026-09-01T19:35:33.549Z"
+      "contentHash": "1509068b1edb760a",
+      "checkedAt": "2026-09-03T01:08:01.559Z"
     },
     {
       "id": "base44-design",
@@ -133,8 +151,8 @@
       "finalUrl": "https://docs.base44.com/Building-your-app/Design",
       "etag": null,
       "lastModified": null,
-      "contentHash": "c1160455e7a98b49",
-      "checkedAt": "2026-09-01T19:35:33.725Z"
+      "contentHash": "b11129e54ddf08a4",
+      "checkedAt": "2026-09-03T01:08:01.956Z"
     },
     {
       "id": "bolt-docs",
@@ -142,17 +160,17 @@
       "finalUrl": "https://support.bolt.new/",
       "etag": null,
       "lastModified": null,
-      "contentHash": "b88c0af2c42d584a",
-      "checkedAt": "2026-09-01T19:35:33.835Z"
+      "contentHash": "746e5915cb967edd",
+      "checkedAt": "2026-09-03T01:08:02.076Z"
     },
     {
       "id": "cursor-docs",
       "status": 200,
       "finalUrl": "https://cursor.com/docs",
-      "etag": "W/\"5b2771c7211bae4895e1ab68f3574387\"",
+      "etag": "W/\"d2d5b2e73f35b90e3bf8f5431de2d0f3\"",
       "lastModified": null,
-      "contentHash": "f41961f7c92b0154",
-      "checkedAt": "2026-09-01T19:35:34.001Z"
+      "contentHash": "88f2af24f84ccb09",
+      "checkedAt": "2026-09-03T01:08:02.235Z"
     },
     {
       "id": "pew-corpus-2026",
@@ -160,62 +178,62 @@
       "finalUrl": "https://www.pewresearch.org/data-labs/2026/08/20/how-much-of-the-internet-is-written-with-ai/",
       "etag": null,
       "lastModified": null,
-      "contentHash": "bdffd6b0a621844b",
-      "checkedAt": "2026-09-01T19:35:34.052Z"
+      "contentHash": "f0eb2722df2a6fa4",
+      "checkedAt": "2026-09-03T01:08:02.285Z"
     },
     {
       "id": "no-ai-slop",
       "status": 200,
       "finalUrl": "https://github.com/petergyang/no-ai-slop",
-      "etag": "W/\"2e9f9af51580f7a0446d92218cf686f2\"",
+      "etag": "W/\"a0362ad5efd436bf388da07436d23d74\"",
       "lastModified": null,
-      "contentHash": "d09887e9429cd628",
-      "checkedAt": "2026-09-01T19:35:34.500Z"
+      "contentHash": "40533542949a8d0c",
+      "checkedAt": "2026-09-03T01:08:02.735Z"
     },
     {
       "id": "signs-of-ai-writing",
       "status": 200,
       "finalUrl": "https://github.com/egc365/signs-of-ai-writing",
-      "etag": "W/\"a937f8aa9ba7dcef146227966e3b3154\"",
+      "etag": "W/\"64291425dd02d501a42fba2c722825f6\"",
       "lastModified": null,
-      "contentHash": "b795d579439f3ee2",
-      "checkedAt": "2026-09-01T19:35:34.869Z"
+      "contentHash": "2bea856682952717",
+      "checkedAt": "2026-09-03T01:08:03.271Z"
     },
     {
       "id": "unslop-ui",
       "status": 200,
       "finalUrl": "https://github.com/claudiusararu/unslop-ui-skill",
-      "etag": "W/\"6074d0f591f5b52393228dcdc3a5233c\"",
+      "etag": "W/\"cd65f612d46b803f2159d0459b8846a2\"",
       "lastModified": null,
-      "contentHash": "695893dd310af358",
-      "checkedAt": "2026-09-01T19:35:35.317Z"
+      "contentHash": "cb609c0ccebad3e0",
+      "checkedAt": "2026-09-03T01:08:03.701Z"
     },
     {
       "id": "ahd-taxonomy",
       "status": 200,
       "finalUrl": "https://github.com/Ad-Astra-Computing/ahd/blob/main/docs/SLOP_TAXONOMY.md",
-      "etag": "W/\"a5202ccc1fc5bf2390796d8c45ca222b\"",
+      "etag": "W/\"e65c54957b54b58f00cb75c5c6075ae7\"",
       "lastModified": null,
-      "contentHash": "23496cca045b2fc8",
-      "checkedAt": "2026-09-01T19:35:35.623Z"
+      "contentHash": "2866961442c3ee94",
+      "checkedAt": "2026-09-03T01:08:04.408Z"
     },
     {
       "id": "anti-ai-slop",
       "status": 200,
       "finalUrl": "https://github.com/Vinayak-Shukla-03/anti-ai-slop",
-      "etag": "W/\"f75171214bff016efe76b61281863d17\"",
+      "etag": "W/\"6bf30d9007e1824d377e77516cf1431c\"",
       "lastModified": null,
-      "contentHash": "9aa372c8d96b6f0c",
-      "checkedAt": "2026-09-01T19:35:36.018Z"
+      "contentHash": "89c5b01dd93c8335",
+      "checkedAt": "2026-09-03T01:08:04.835Z"
     },
     {
       "id": "wikipedia-ai-writing",
       "status": 200,
       "finalUrl": "https://en.wikipedia.org/wiki/Wikipedia:Signs_of_AI_writing",
       "etag": null,
-      "lastModified": "Tue, 01 Sep 2026 15:31:07 GMT",
-      "contentHash": "e40ac224d8c8a954",
-      "checkedAt": "2026-09-01T19:35:36.104Z"
+      "lastModified": "Wed, 02 Sep 2026 21:17:55 GMT",
+      "contentHash": "a2c6178d3db39a00",
+      "checkedAt": "2026-09-03T01:08:04.932Z"
     },
     {
       "id": "brandiddit-lovable",
@@ -224,7 +242,7 @@
       "etag": null,
       "lastModified": null,
       "contentHash": "68cb3fa1b50559a8",
-      "checkedAt": "2026-09-01T19:35:36.925Z"
+      "checkedAt": "2026-09-03T01:08:05.745Z"
     },
     {
       "id": "reddit-claude-fonts",
@@ -232,8 +250,8 @@
       "finalUrl": "https://www.reddit.com/r/ClaudeAI/comments/1u95x9l/you_can_spot_a_claudebuilt_app_instantly_its_the/",
       "etag": null,
       "lastModified": null,
-      "contentHash": "446dd4fa52ee5031",
-      "checkedAt": "2026-09-01T19:35:36.959Z"
+      "contentHash": "43d9b2f7dfc68562",
+      "checkedAt": "2026-09-03T01:08:05.782Z"
     },
     {
       "id": "reddit-italic-headline",
@@ -241,8 +259,8 @@
       "finalUrl": "https://www.reddit.com/r/webdesign/comments/1te1sui/whatever_this_is_called_i_hate_it/",
       "etag": null,
       "lastModified": null,
-      "contentHash": "6c4bcf6b742eb2fa",
-      "checkedAt": "2026-09-01T19:35:36.982Z"
+      "contentHash": "d528ff7c28dd8a4e",
+      "checkedAt": "2026-09-03T01:08:05.806Z"
     },
     {
       "id": "reddit-cursor-premium",
@@ -250,8 +268,8 @@
       "finalUrl": "https://www.reddit.com/r/cursor/comments/1uc5ani/how_do_you_get_cursor_to_build_premium_saas_ui/",
       "etag": null,
       "lastModified": null,
-      "contentHash": "e9fc19facd32c376",
-      "checkedAt": "2026-09-01T19:35:37.007Z"
+      "contentHash": "d20d6f7c93f3e0fe",
+      "checkedAt": "2026-09-03T01:08:05.834Z"
     },
     {
       "id": "reddit-ai-decks",
@@ -259,8 +277,8 @@
       "finalUrl": "https://www.reddit.com/r/powerpoint/comments/1u3xxm9/is_it_just_me_or_do_all_ai_generated_decks_look/",
       "etag": null,
       "lastModified": null,
-      "contentHash": "e9ffa63a742bd4fb",
-      "checkedAt": "2026-09-01T19:35:37.045Z"
+      "contentHash": "e624122d6702b046",
+      "checkedAt": "2026-09-03T01:08:05.865Z"
     }
   ]
 }

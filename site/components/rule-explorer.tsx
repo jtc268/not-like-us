@@ -12,10 +12,12 @@ type Rule = {
   scope: string[];
   evidence: string;
   sources: string[];
+  reviewed: string;
 };
 
-type Source = { id: string; title: string; url: string };
+type Source = { id: string; title: string; displayTitle?: string; publisher: string; url: string };
 type Tool = { id: string; name: string };
+const month = new Intl.DateTimeFormat('en-US', { month: 'short', year: 'numeric', timeZone: 'UTC' });
 
 function RuleList({ rules, sourceById }: { rules: Rule[]; sourceById: Map<string, Source> }) {
   return (
@@ -25,6 +27,7 @@ function RuleList({ rules, sourceById }: { rules: Rule[]; sourceById: Map<string
           <header>
             <span>{rule.id}</span>
             <span>{rule.group}</span>
+            <time dateTime={rule.reviewed}>Reviewed {month.format(new Date(`${rule.reviewed}T00:00:00Z`))}</time>
             <b>{rule.evidence}</b>
           </header>
           <h3>{rule.title}</h3>
@@ -43,7 +46,7 @@ function RuleList({ rules, sourceById }: { rules: Rule[]; sourceById: Map<string
               const source = sourceById.get(id);
               return source ? (
                 <a href={source.url} key={id}>
-                  {source.title} ↗
+                  {source.publisher}: {source.displayTitle ?? source.title} ↗
                 </a>
               ) : null;
             })}
@@ -54,7 +57,7 @@ function RuleList({ rules, sourceById }: { rules: Rule[]; sourceById: Map<string
   );
 }
 
-export default function RuleExplorer({ rules, sources, tools }: { rules: Rule[]; sources: Source[]; tools: Tool[] }) {
+export default function RuleExplorer({ rules, sources, tools, checkedAt }: { rules: Rule[]; sources: Source[]; tools: Tool[]; checkedAt: string }) {
   const [kind, setKind] = useState('all');
   const [tool, setTool] = useState('all');
   const [query, setQuery] = useState('');
@@ -113,7 +116,10 @@ export default function RuleExplorer({ rules, sources, tools }: { rules: Rule[];
           />
         </label>
         <output>
-          {matches.length} {matches.length === 1 ? 'rule' : 'rules'}
+          <span>
+            {matches.length} {matches.length === 1 ? 'rule' : 'rules'}
+          </span>
+          <small>Sources checked {month.format(new Date(checkedAt))}</small>
         </output>
       </div>
 

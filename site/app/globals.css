@@ -109,10 +109,12 @@ pre { margin: 0; padding: clamp(4.5rem, 5vw, 5rem) clamp(2rem, 5vw, 5rem); overf
 .filters label span { font-size: .6rem; text-transform: uppercase; letter-spacing: .1em; }
 .filters select, .filters input { width: 100%; min-height: 38px; border: 0; border-bottom: 1px solid var(--rule); border-radius: 0; background: transparent; color: var(--ink); font-size: .76rem; }
 .filters input:focus, .filters select:focus { outline: 2px solid var(--signal); outline-offset: 2px; }
-.filters output { padding-bottom: .65rem; color: var(--muted); font-size: .68rem; white-space: nowrap; }
+.filters output { display: grid; justify-items: end; gap: .18rem; padding-bottom: .45rem; color: var(--muted); font-size: .68rem; white-space: nowrap; }
+.filters output small { font-size: .56rem; letter-spacing: .06em; text-transform: uppercase; }
 
 .rule-list article { padding: 2rem clamp(1.25rem, 3vw, 3rem); border-bottom: 1px solid var(--rule); }
-.rule-list article > header { display: flex; gap: 1rem; color: var(--muted); font-size: .62rem; text-transform: uppercase; letter-spacing: .08em; }
+.rule-list article > header { display: flex; flex-wrap: wrap; gap: .45rem 1rem; color: var(--muted); font-size: .62rem; text-transform: uppercase; letter-spacing: .08em; }
+.rule-list article > header time { color: var(--muted); }
 .rule-list article > header b { margin-left: auto; color: var(--signal); font-weight: 600; }
 .rule-list h3 { margin: 1rem 0 1.5rem; font-size: clamp(1.6rem, 3vw, 3rem); line-height: 1; letter-spacing: -.05em; }
 .rule-list dl { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin: 0; }

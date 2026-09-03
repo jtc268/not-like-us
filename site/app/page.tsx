@@ -1,5 +1,6 @@
 import rules from '../../manual/data/rules.json';
 import sources from '../../manual/data/sources.json';
+import radar from '../../manual/data/radar.json';
 import toolData from '../../manual/data/tools.json';
 import quickRules from '../../manual/prompt.txt?raw';
 import Link from 'next/link';
@@ -11,6 +12,7 @@ import { PRICE_LABEL } from '../lib/stream';
 const repo = 'https://github.com/jtc268/not-like-us';
 const typeOrder = ['official', 'research', 'repository', 'community'];
 const ledger = [...sources].sort((a, b) => typeOrder.indexOf(a.type) - typeOrder.indexOf(b.type));
+const sourceTitle = (source: { title: string; displayTitle?: string }) => source.displayTitle ?? source.title;
 
 export default function Home() {
   return (
@@ -64,7 +66,7 @@ export default function Home() {
           <h2 id="rules-title">Rule catalog</h2>
           <p>Filter by medium or generator. Each row says what to reject and what to try next.</p>
         </div>
-        <RuleExplorer rules={rules} sources={sources} tools={toolData} />
+        <RuleExplorer rules={rules} sources={sources} tools={toolData} checkedAt={radar.generatedAt} />
       </section>
 
       <section className="tool-strip" id="tools" aria-labelledby="tool-heading">
@@ -123,7 +125,7 @@ export default function Home() {
           {ledger.map((source) => (
             <a href={source.url} key={source.id}>
               <span>{source.type}</span>
-              <strong>{source.title}</strong>
+              <strong>{sourceTitle(source)}</strong>
               <small>{source.publisher}</small>
             </a>
           ))}
