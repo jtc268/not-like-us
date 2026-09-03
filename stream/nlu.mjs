@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 // nlu: the Not Like Us Stream client. Node 18 or newer. No dependencies.
 //
+//   nlu setup <key>      save the key, install the current rules, and add update hooks
 //   nlu login <key>      save your subscriber key
 //   nlu sync             pull the latest rules into every agent on this machine
 //   nlu hook             re-sync at the start of every Claude Code, Codex, Cursor, Gemini, and Copilot session
@@ -20,8 +21,8 @@ import path from 'node:path';
 import { createInterface } from 'node:readline';
 import { fileURLToPath } from 'node:url';
 
-const VERSION = '1.0.0';
-const SITE = (process.env.NOT_LIKE_US_URL || 'https://notlikeus.adorellc.pro').replace(/\/$/, '');
+const VERSION = '1.1.0';
+const SITE = (process.env.NOT_LIKE_US_URL || 'https://notlikeus.art').replace(/\/$/, '');
 const HOME = os.homedir();
 const NLU_HOME = process.env.NOT_LIKE_US_HOME || path.join(HOME, '.config', 'not-like-us');
 const KEY_FILE = path.join(NLU_HOME, 'key');
@@ -554,10 +555,10 @@ async function mcp() {
           ];
           if (cache?.reason) lines.push(`The saved key was rejected: ${cache.reason}`);
           if (method !== 'x402') {
-            lines.push(`Person at a keyboard: open ${SITE}/subscribe. Subscribe (monthly, cancel any time) or Pay once (1 to 12 months, no renewal). Cards, Apple Pay, Google Pay, Link, US bank debit, Amazon Pay, USDC where enabled. The welcome page shows the key; then run: nlu login <key> && nlu sync.`);
+            lines.push(`Person at a keyboard: open ${SITE}/subscribe. Subscribe (monthly, cancel any time) or Pay once (1 to 12 months, no renewal). Cards, Apple Pay, Google Pay, Link, US bank debit, Amazon Pay, USDC where enabled. The welcome page shows the key; then run: nlu setup <key>.`);
           }
           if (method !== 'stripe') {
-            lines.push(`Agent with a USDC wallet: GET ${SITE}/v1/x402/pass returns HTTP 402 with x402 payment requirements (USDC on Base). Pay with any x402 client, for example x402-fetch, and the response is JSON with a key and an expiry. Then run: nlu login <key> && nlu sync. Discovery: ${SITE}/.well-known/x402`);
+            lines.push(`Agent with a USDC wallet: GET ${SITE}/v1/x402/pass returns HTTP 402 with x402 payment requirements (USDC on Base). Pay with any x402 client, for example x402-fetch, and the response is JSON with a key and an expiry. Then run: nlu setup <key>. Discovery: ${SITE}/.well-known/x402`);
           }
           reply(id, { content: [{ type: 'text', text: lines.join('\n\n') }] });
         } else if (params.name === 'not_like_us_rules') {
@@ -605,7 +606,7 @@ async function status() {
     const body = await response.json();
     console.log(`Key:       ${response.ok ? `active (${body.status}${body.renewsAt ? `, renews ${body.renewsAt.slice(0, 10)}` : ''})` : body.error}`);
   } else {
-    console.log(`Key:       none. Subscribe at ${SITE}/subscribe, then nlu login <key>.`);
+    console.log(`Key:       none. Subscribe at ${SITE}/subscribe, then nlu setup <key>.`);
   }
   if (state.targets?.length) {
     console.log('Installed in:');
@@ -623,6 +624,15 @@ async function login() {
   const body = await response.json();
   if (!response.ok) throw new Error(body.error ?? 'That key was rejected.');
   console.log(`Key saved to ${KEY_FILE}. Subscription ${body.status}. Run nlu sync.`);
+}
+
+async function setup() {
+  const key = args[1] ?? process.env.NOT_LIKE_US_KEY;
+  if (!key?.startsWith('nlu_')) throw new Error('Usage: nlu setup nlu_...');
+  await login();
+  await sync();
+  await hook();
+  console.log('\nSetup complete. Your installed agents now use the current Not Like Us Stream.');
 }
 
 async function recover() {
@@ -668,6 +678,7 @@ async function uninstall() {
 function help() {
   console.log(`nlu ${VERSION}: Not Like Us Stream client
 
+  nlu setup <key>      save the key, install the current rules, and add update hooks
   nlu login <key>      save your subscriber key (${KEY_FILE})
   nlu sync             pull the latest rules into every agent on this machine
        --project         install into the current project (.agents/skills and AGENTS.md) instead
@@ -685,7 +696,7 @@ function help() {
 Stream: ${SITE}/subscribe`);
 }
 
-const commands = { login, sync, hook, schedule, mcp, status, recover, rotate, uninstall, help };
+const commands = { setup, login, sync, hook, schedule, mcp, status, recover, rotate, uninstall, help };
 const run = commands[command] ?? help;
 Promise.resolve()
   .then(() => run())

@@ -29,6 +29,7 @@
   "secrets": {
     "required": [
       "STRIPE_SECRET_KEY",
+      "NLU_JOB_SECRET",
       "STRIPE_PRICE_ID",
       "STRIPE_PORTAL_CONFIG_ID",
       "NLU_KEY_SECRET",

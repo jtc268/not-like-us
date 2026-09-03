@@ -67,16 +67,15 @@ export default async function Stream({ searchParams }: { searchParams: Promise<S
             STREAM
           </h1>
           <p className="deck">
-            A daily release monitor checks major model catalogs. When a new model is callable, it gets the same private
-            test at default settings with no system prompt. After review, the new rules sync to subscribers&apos; agents
-            so that model&apos;s defaults do not become their house style.
+            Your key pulls the current Not Like Us rules into the AI tools you already use. We test new model releases,
+            review what repeats, and publish changes to the private feed.
           </p>
           <StreamStatus />
         </div>
         <aside className="hero-note">
           <span>Stream</span>
           <strong>{PRICE_LABEL}</strong>
-          <p>One key, every machine you own. Cancel from the billing portal any time.</p>
+          <p>After payment, copy one command. It installs the current feed and turns on updates.</p>
           <form method="post" action="/v1/checkout">
             <button type="submit" className="button">
               Subscribe with Stripe
@@ -93,9 +92,25 @@ export default async function Stream({ searchParams }: { searchParams: Promise<S
         </aside>
       </section>
 
-      <section className="quick" aria-labelledby="compare-title">
+      <section className="quick" aria-labelledby="after-title">
         <div className="section-label">
           <span>02</span>
+          <h2 id="after-title">After checkout</h2>
+          <p>Stripe returns you here with a private key. The same key and setup command arrive by email.</p>
+        </div>
+        <div className="doc">
+          <p>
+            Open Terminal on Mac, or PowerShell on Windows. Copy one command from the welcome page and press Enter. The
+            installer checks your key, finds supported AI tools, writes the current rules, and adds an update check when
+            those tools start.
+          </p>
+          <p>Your key is the login. There is no separate account or password.</p>
+        </div>
+      </section>
+
+      <section className="quick" aria-labelledby="compare-title">
+        <div className="section-label">
+          <span>03</span>
           <h2 id="compare-title">Snapshot or stream</h2>
           <p>The public repository is a snapshot. It is free for noncommercial use and it stays where it was the day you cloned it.</p>
         </div>
@@ -146,19 +161,18 @@ export default async function Stream({ searchParams }: { searchParams: Promise<S
 
       <section className="quick" id="setup" aria-labelledby="setup-title">
         <div className="section-label">
-          <span>03</span>
-          <h2 id="setup-title">Setup</h2>
+          <span>04</span>
+          <h2 id="setup-title">One-command setup</h2>
           <p>
-            After checkout you get a key that starts with <code>nlu_</code>. Three commands install and keep it current.
-            Node 18 or newer.
+            Replace <code>nlu_...</code> with the key from the welcome page or email. Node 18 or newer.
           </p>
         </div>
-        <CopyBlock value={`npx github:jtc268/not-like-us login nlu_...\nnpx github:jtc268/not-like-us sync\nnpx github:jtc268/not-like-us hook`} />
+        <CopyBlock value="npx github:jtc268/not-like-us setup nlu_..." />
       </section>
 
       <section className="quick" aria-labelledby="where-title">
         <div className="section-label">
-          <span>04</span>
+          <span>05</span>
           <h2 id="where-title">Where sync writes</h2>
           <p>Only folders that exist on the machine are touched. Managed blocks are marked and can be removed with uninstall.</p>
         </div>
@@ -202,7 +216,7 @@ export default async function Stream({ searchParams }: { searchParams: Promise<S
 
       <section className="quick" aria-labelledby="auto-title">
         <div className="section-label">
-          <span>05</span>
+          <span>06</span>
           <h2 id="auto-title">Keeping it current</h2>
           <p>
             <code>hook</code> adds a session-start hook to Claude Code, Codex, Cursor, Gemini CLI, and Copilot. It re-syncs
@@ -217,12 +231,11 @@ export default async function Stream({ searchParams }: { searchParams: Promise<S
 
       <section className="quick" aria-labelledby="mcp-title">
         <div className="section-label">
-          <span>06</span>
+          <span>07</span>
           <h2 id="mcp-title">MCP</h2>
           <p>
-            The same client runs as a stdio MCP server. Resources for the skill, the paste block, both rule sets, and every
-            tool guide. One tool, <code>not_like_us_rules</code>, that returns the current rules plus the guide for a named
-            generator. One prompt, <code>not-like-us-review</code>.
+            The same client runs as a stdio MCP server. It serves the current skill, rule sets, and tool guides. The{' '}
+            <code>not_like_us_rules</code> tool returns the current rules plus the guide for a named generator.
           </p>
         </div>
         <CopyBlock
@@ -232,7 +245,7 @@ export default async function Stream({ searchParams }: { searchParams: Promise<S
 
       <section className="quick" aria-labelledby="x402-title">
         <div className="section-label">
-          <span>07</span>
+          <span>08</span>
           <h2 id="x402-title">Agents pay by themselves</h2>
           <p>
             An agent with a USDC wallet does not need you at the keyboard. The pass endpoint answers 402 with x402
@@ -242,13 +255,13 @@ export default async function Stream({ searchParams }: { searchParams: Promise<S
           </p>
         </div>
         <CopyBlock
-          value={`# 1. Ask for the price (HTTP 402, x402 v2, USDC on Base, Polygon, or Arbitrum)\ncurl -i ${SITE}/v1/x402/pass\n\n# 2. Pay with any x402 client, for example @x402/fetch, and read the key from the JSON\n#    { "key": "nlu_...", "until": "...", "days": 30 }\n\n# 3. Use it\nnpx github:jtc268/not-like-us login nlu_... && npx github:jtc268/not-like-us sync`}
+          value={`# Ask for the price (HTTP 402, x402 v2, USDC on Base, Polygon, or Arbitrum)\ncurl -i ${SITE}/v1/x402/pass\n\n# Pay with any x402 client and read the key from the JSON response\n# { "key": "nlu_...", "until": "...", "days": 30 }\n\n# Install the Stream\nnpx github:jtc268/not-like-us setup nlu_...`}
         />
       </section>
 
       <section className="quick" aria-labelledby="free-title">
         <div className="section-label">
-          <span>08</span>
+          <span>09</span>
           <h2 id="free-title">Try it free first</h2>
           <p>Every command works without a key. It installs the public snapshot and tells you how far behind the stream it is.</p>
         </div>
@@ -257,7 +270,7 @@ export default async function Stream({ searchParams }: { searchParams: Promise<S
 
       <section className="method" id="manage">
         <div className="section-label">
-          <span>09</span>
+          <span>10</span>
           <h2>Billing and keys</h2>
           <p>
             {recovered
@@ -284,14 +297,15 @@ export default async function Stream({ searchParams }: { searchParams: Promise<S
 
       <section className="method" id="terms">
         <div className="section-label">
-          <span>10</span>
+          <span>11</span>
           <h2>Terms</h2>
           <p>Plain language. The Stripe receipt and the billing portal are the record.</p>
         </div>
         <div className="doc terms">
           <p>
-            <b>What you buy.</b> Access for one person to the Not Like Us Stream: the feed, the client, the MCP server, and
-            the changelog, on any number of machines that person uses, for as long as the subscription is active.
+            <b>What you buy.</b> Access for one person to the private, continuously updated rule feed. It includes writing
+            and design rules, tool-specific guides, sources, the changelog, the installer, MCP access, and commercial use
+            on any number of machines that person uses while the subscription is active.
           </p>
           <p>
             <b>Billing.</b> {PRICE_LABEL}, charged by Stripe on the day you subscribe and monthly after that. Cancel from

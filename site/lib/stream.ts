@@ -66,13 +66,16 @@ function fromBase64url(input: string): string {
   return atob(padded);
 }
 
-async function hmac(secret: string, data: string): Promise<string> {
+async function hmacHex(secret: string, data: string): Promise<string> {
   const key = await crypto.subtle.importKey('raw', encoder.encode(secret), { name: 'HMAC', hash: 'SHA-256' }, false, ['sign']);
   const signature = await crypto.subtle.sign('HMAC', key, encoder.encode(data));
   return Array.from(new Uint8Array(signature))
     .map((byte) => byte.toString(16).padStart(2, '0'))
-    .join('')
-    .slice(0, 32);
+    .join('');
+}
+
+async function hmac(secret: string, data: string): Promise<string> {
+  return (await hmacHex(secret, data)).slice(0, 32);
 }
 
 function constantTimeEqual(a: string, b: string): boolean {
@@ -109,14 +112,19 @@ export async function parseKey(key: string): Promise<{ customerId: string; versi
 
 type StripeObject = Record<string, unknown> & { id?: string; error?: { message?: string } };
 
-async function stripe(path: string, options: { method?: string; body?: Record<string, string> } = {}): Promise<StripeObject> {
+async function stripe(
+  path: string,
+  options: { method?: string; body?: Record<string, string>; idempotencyKey?: string } = {},
+): Promise<StripeObject> {
+  const headers: Record<string, string> = {
+    authorization: `Bearer ${env('STRIPE_SECRET_KEY')}`,
+    'content-type': 'application/x-www-form-urlencoded',
+    'user-agent': 'not-like-us-stream/1.0',
+  };
+  if (options.idempotencyKey) headers['idempotency-key'] = options.idempotencyKey;
   const response = await fetch(`https://api.stripe.com${path}`, {
     method: options.method ?? (options.body ? 'POST' : 'GET'),
-    headers: {
-      authorization: `Bearer ${env('STRIPE_SECRET_KEY')}`,
-      'content-type': 'application/x-www-form-urlencoded',
-      'user-agent': 'not-like-us-stream/1.0',
-    },
+    headers,
     body: options.body ? new URLSearchParams(options.body).toString() : undefined,
   });
   const data = (await response.json()) as StripeObject;
@@ -131,6 +139,7 @@ type Subscription = {
   cancel_at_period_end?: boolean;
   trial_end?: number | null;
   metadata?: Record<string, string>;
+  items?: { data?: { price?: { id?: string } }[] };
 };
 
 export type Standing = {
@@ -144,7 +153,9 @@ const GOOD = new Set(['active', 'trialing', 'past_due']);
 
 export async function standing(customerId: string): Promise<Standing> {
   const list = await stripe(`/v1/subscriptions?customer=${customerId}&status=all&limit=10`);
-  const subscriptions = (list.data as Subscription[] | undefined) ?? [];
+  const subscriptions = ((list.data as Subscription[] | undefined) ?? []).filter(
+    (item) => item.metadata?.product === PRODUCT || item.items?.data?.some((line) => line.price?.id === env('STRIPE_PRICE_ID')),
+  );
   const best = subscriptions.find((item) => item.status === 'active' || item.status === 'trialing') ?? subscriptions.find((item) => item.status === 'past_due') ?? subscriptions[0];
   if (!best) return { ok: false, status: 'none', renewsAt: null, cancelsAtPeriodEnd: false };
   return {
@@ -252,22 +263,27 @@ export type CheckoutResult = {
   months: number;
   paymentIntentId: string | null;
   granted: boolean;
+  grantedUntil: string;
+  product: string;
 };
 
 export async function checkoutSession(sessionId: string): Promise<CheckoutResult> {
   if (!/^cs_(live|test)_[A-Za-z0-9]+$/.test(sessionId)) throw new StreamError(400, 'That checkout session id is not valid.');
   const session = await stripe(`/v1/checkout/sessions/${sessionId}`);
   const details = session.customer_details as { email?: string } | undefined;
+  const metadata = (session.metadata as Record<string, string> | undefined) ?? {};
   const mode = session.mode === 'payment' ? 'payment' : 'subscription';
   let months = 0;
   let granted = false;
+  let grantedUntil = '';
   const paymentIntentId = (session.payment_intent as string | null) ?? null;
   if (mode === 'payment') {
     const items = await stripe(`/v1/checkout/sessions/${sessionId}/line_items?limit=5`);
     months = ((items.data as { quantity?: number }[] | undefined) ?? []).reduce((sum, item) => sum + (item.quantity ?? 0), 0) || 1;
     if (paymentIntentId) {
       const intent = await stripe(`/v1/payment_intents/${paymentIntentId}`);
-      granted = Boolean(((intent.metadata as Record<string, string> | undefined) ?? {}).nlu_granted);
+      grantedUntil = ((intent.metadata as Record<string, string> | undefined) ?? {}).nlu_granted ?? '';
+      granted = Boolean(grantedUntil);
     }
   }
   return {
@@ -278,6 +294,8 @@ export async function checkoutSession(sessionId: string): Promise<CheckoutResult
     months,
     paymentIntentId,
     granted,
+    grantedUntil,
+    product: metadata.product ?? '',
   };
 }
 
@@ -310,7 +328,12 @@ export async function passCheckoutUrl(origin: string): Promise<string> {
 // Turns a prepaid purchase into access: a trialing subscription with no card
 // that ends by itself, so the same key check covers every payment rail. If a
 // prepaid subscription is already running, its end date moves out instead.
-export async function grantDays(customerId: string, days: number, note: Record<string, string> = {}): Promise<{ until: string }> {
+export async function grantDays(
+  customerId: string,
+  days: number,
+  note: Record<string, string> = {},
+  idempotencyKey?: string,
+): Promise<{ until: string }> {
   const list = await stripe(`/v1/subscriptions?customer=${customerId}&status=all&limit=10`);
   const subscriptions = (list.data as Subscription[] | undefined) ?? [];
   const current = subscriptions.find((item) => item.status === 'trialing' && item.metadata?.nlu_prepaid === '1');
@@ -318,7 +341,10 @@ export async function grantDays(customerId: string, days: number, note: Record<s
   const base = current?.trial_end && current.trial_end > now ? current.trial_end : now;
   const trialEnd = base + days * 86400;
   if (current) {
-    await stripe(`/v1/subscriptions/${current.id}`, { body: { trial_end: String(trialEnd), proration_behavior: 'none' } });
+    await stripe(`/v1/subscriptions/${current.id}`, {
+      body: { trial_end: String(trialEnd), proration_behavior: 'none' },
+      idempotencyKey,
+    });
   } else {
     const body: Record<string, string> = {
       customer: customerId,
@@ -329,13 +355,16 @@ export async function grantDays(customerId: string, days: number, note: Record<s
       'metadata[product]': PRODUCT,
     };
     for (const [key, value] of Object.entries(note)) body[`metadata[${key}]`] = value;
-    await stripe('/v1/subscriptions', { body });
+    await stripe('/v1/subscriptions', { body, idempotencyKey });
   }
   return { until: new Date(trialEnd * 1000).toISOString() };
 }
 
-export async function markGranted(paymentIntentId: string, until: string): Promise<void> {
-  await stripe(`/v1/payment_intents/${paymentIntentId}`, { body: { 'metadata[nlu_granted]': until } });
+export async function markGranted(paymentIntentId: string, until: string, idempotencyKey?: string): Promise<void> {
+  await stripe(`/v1/payment_intents/${paymentIntentId}`, {
+    body: { 'metadata[nlu_granted]': until },
+    idempotencyKey,
+  });
 }
 
 export async function portalUrl(customerId: string, origin: string): Promise<string> {
@@ -375,7 +404,7 @@ export function buyHints() {
 export const PAYMENT_LINK = { link: `<${SITE}/v1/x402/pass>; rel="payment"` };
 
 export async function customersByEmail(email: string): Promise<string[]> {
-  const list = await stripe(`/v1/customers?email=${encodeURIComponent(email)}&limit=10`);
+  const list = await stripe(`/v1/customers?email=${encodeURIComponent(email)}&limit=100`);
   return ((list.data as { id: string }[] | undefined) ?? []).map((item) => item.id);
 }
 
@@ -550,22 +579,29 @@ export function contentTypeFor(path: string): string {
 // ---------------------------------------------------------------------------
 // Email through Resend. Plain text, in the manual's own voice.
 
-export async function sendKeyEmail(to: string, key: string, subject = 'Your Not Like Us Stream key'): Promise<boolean> {
+export async function sendKeyEmail(
+  to: string,
+  key: string,
+  subject = 'Your Not Like Us Stream key',
+  idempotencyKey?: string,
+): Promise<boolean> {
   const apiKey = process.env.RESEND_API_KEY;
   const from = process.env.NLU_FROM_EMAIL ?? 'stream@adorellc.pro';
   if (!apiKey) return false;
   const body = [
-    'Thanks for subscribing. This is your Stream key. Keep it private; it is the only login.',
+    'Your Not Like Us Stream is active.',
+    '',
+    'This key unlocks the current private rules, tool guides, and changelog. Keep it private. It is your login.',
     '',
     key,
     '',
-    'Set it up once (Node 18 or newer):',
+    'Open Terminal on Mac, or PowerShell on Windows. Paste this one command and press Enter:',
     '',
-    `  npx github:jtc268/not-like-us login ${key}`,
-    '  npx github:jtc268/not-like-us sync',
-    '  npx github:jtc268/not-like-us schedule',
+    `  npx github:jtc268/not-like-us setup ${key}`,
     '',
-    'sync writes the latest SKILL.md into every agent it finds on the machine (Claude Code, Codex, Cursor, OpenClaw, Hermes, Gemini CLI, Copilot, and the shared ~/.agents/skills folder). schedule makes that happen every morning.',
+    'The setup command checks the key, installs the current rules in every supported AI tool it finds, and adds an update check when those tools start.',
+    '',
+    'Supported tools include Claude Code, Codex, Cursor, OpenClaw, Hermes, Gemini CLI, Copilot, and the shared ~/.agents/skills folder.',
     '',
     `Hermes can pull straight from the URL instead: hermes skills install ${SITE}/v1/k/${key}/SKILL.md`,
     '',
@@ -577,9 +613,82 @@ export async function sendKeyEmail(to: string, key: string, subject = 'Your Not 
   ].join('\n');
   const response = await fetch('https://api.resend.com/emails', {
     method: 'POST',
-    headers: { authorization: `Bearer ${apiKey}`, 'content-type': 'application/json' },
+    headers: {
+      authorization: `Bearer ${apiKey}`,
+      'content-type': 'application/json',
+      ...(idempotencyKey ? { 'idempotency-key': idempotencyKey } : {}),
+    },
     body: JSON.stringify({ from: `Not Like Us Stream <${from}>`, to: [to], subject, text: body }),
   });
   if (!response.ok) console.error('resend failed', response.status, await response.text());
   return response.ok;
+}
+
+export type CheckoutFulfillment = {
+  key: string;
+  email: string | null;
+  emailed: boolean;
+  passUntil: string;
+};
+
+export async function fulfillCheckout(sessionId: string, sendWelcome = true): Promise<CheckoutFulfillment> {
+  const session = await checkoutSession(sessionId);
+  if (session.product !== PRODUCT) throw new StreamError(403, 'That checkout belongs to a different product.');
+  if (!session.customerId || !session.paid) throw new StreamError(409, 'Checkout has not completed yet.');
+
+  let passUntil = session.grantedUntil;
+  if (session.mode === 'payment' && !session.granted) {
+    const grant = await grantDays(
+      session.customerId,
+      30 * session.months,
+      { nlu_pass_months: String(session.months) },
+      `nlu-pass-grant/${sessionId}`,
+    );
+    passUntil = grant.until;
+    if (session.paymentIntentId) await markGranted(session.paymentIntentId, grant.until, `nlu-pass-mark/${sessionId}`);
+  }
+
+  const account = await customer(session.customerId);
+  const key = await makeKey(session.customerId, account.keyVersion);
+  const email = session.email ?? account.email;
+  let emailed = account.welcomeSent;
+  if (sendWelcome && email && !account.welcomeSent) {
+    emailed = await sendKeyEmail(email, key, 'Your Not Like Us Stream key', `nlu-welcome/${sessionId}`);
+    if (!emailed) throw new StreamError(502, 'The purchase completed, but the welcome email could not be sent.');
+    await setCustomerMetadata(session.customerId, { nlu_welcome_sent: new Date().toISOString() });
+  }
+  return { key, email, emailed, passUntil };
+}
+
+export async function reconcileRecentCheckouts(): Promise<{ checked: number; fulfilled: number; deferred: number; failed: number }> {
+  const since = Math.floor(Date.now() / 1000) - 24 * 60 * 60;
+  let startingAfter = '';
+  let checked = 0;
+  let fulfilled = 0;
+  let deferred = 0;
+  let failed = 0;
+
+  for (let page = 0; page < 5; page += 1) {
+    const path = `/v1/checkout/sessions?status=complete&created[gte]=${since}&limit=100${startingAfter ? `&starting_after=${startingAfter}` : ''}`;
+    const list = await stripe(path);
+    const sessions = (list.data as { id: string; metadata?: Record<string, string> }[] | undefined) ?? [];
+    for (const session of sessions) {
+      if (session.metadata?.product !== PRODUCT) continue;
+      checked += 1;
+      try {
+        await fulfillCheckout(session.id, true);
+        fulfilled += 1;
+      } catch (error) {
+        if (error instanceof StreamError && error.status === 409) deferred += 1;
+        else {
+          failed += 1;
+          console.error('checkout reconciliation failed', session.id, error);
+        }
+      }
+    }
+    if (!list.has_more || sessions.length === 0) break;
+    startingAfter = sessions[sessions.length - 1].id;
+  }
+
+  return { checked, fulfilled, deferred, failed };
 }

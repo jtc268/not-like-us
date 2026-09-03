@@ -1,6 +1,6 @@
 # Not Like Us Stream
 
-The Stream is the paid, live edition of the manual. Tool defaults change every few weeks. The Stream delivers each rule change to Claude Code, Codex, Cursor, OpenClaw, Hermes, Gemini CLI, and Copilot as it lands, so a subscriber's work keeps looking like theirs. $4.99 a month, one key per person, any number of machines. Subscribe at https://notlikeus.adorellc.pro/subscribe.
+The Stream is the paid, live edition of the manual. Tool defaults change every few weeks. The Stream delivers each rule change to Claude Code, Codex, Cursor, OpenClaw, Hermes, Gemini CLI, and Copilot as it lands, so a subscriber's work keeps looking like theirs. $4.99 a month, one key per person, any number of machines. Subscribe at https://notlikeus.art/subscribe.
 
 The public repository is a snapshot. It is free for noncommercial use and it does not update itself.
 
@@ -17,7 +17,7 @@ Every model release gets the same private test at default settings with no syste
 
 ## x402: agents pay by themselves
 
-`GET https://notlikeus.adorellc.pro/v1/x402/pass` answers HTTP 402. The `PAYMENT-REQUIRED` header (and the body) carry x402 v2 requirements: scheme `exact`, amount `4990000` (USD 4.99 in USDC, six decimals), on Base `eip155:8453`, Polygon `eip155:137`, and Arbitrum One `eip155:42161`, paid to the Stream's wallet. An x402 client signs an EIP-3009 authorization and retries with `PAYMENT-SIGNATURE`. The server verifies and settles through a facilitator (PayAI by default, keyless; set `NLU_X402_FACILITATOR` to switch, for example to Coinbase's CDP facilitator for Bazaar indexing), then answers 200 with `{ key, until, days, feed }` and a `PAYMENT-RESPONSE` header.
+`GET https://notlikeus.art/v1/x402/pass` answers HTTP 402. The `PAYMENT-REQUIRED` header (and the body) carry x402 v2 requirements: scheme `exact`, amount `4990000` (USD 4.99 in USDC, six decimals), on Base `eip155:8453`, Polygon `eip155:137`, and Arbitrum One `eip155:42161`, paid to the Stream's wallet. An x402 client signs an EIP-3009 authorization and retries with `PAYMENT-SIGNATURE`. The server verifies and settles through a facilitator (PayAI by default, keyless; set `NLU_X402_FACILITATOR` to switch, for example to Coinbase's CDP facilitator for Bazaar indexing), then answers 200 with `{ key, until, days, feed }` and a `PAYMENT-RESPONSE` header.
 
 Each paying wallet maps to one Stripe customer, and the pass is a 30-day trialing subscription with no card, so the key check is the same as for every other rail. Paying again from the same wallet before the expiry extends the same key by 30 days.
 
@@ -30,7 +30,7 @@ Not done yet, each needs a Dashboard or account step: Stripe stablecoins (reques
 ## How it works
 
 - The live rules live in a private repository. Every commit to it is a new stream version within a minute.
-- The feed at `https://notlikeus.adorellc.pro/v1/feed` serves the current skill, agent instructions, paste block, rules, tool guides, data, and changelog as one JSON document. It needs a key.
+- The feed at `https://notlikeus.art/v1/feed` serves the current skill, agent instructions, paste block, rules, tool guides, data, and changelog as one JSON document. It needs a key.
 - A key encodes the Stripe customer and is signed by the server. Stripe is the only database. A key works while the subscription is active or trialing, and stops within ten minutes of a cancellation taking effect.
 - The client in this folder, `nlu.mjs`, writes the feed into every agent it finds and can keep it current by session hook, OS schedule, or as an MCP server.
 
@@ -40,11 +40,12 @@ Run it with npx, or fetch it once:
 
 ```sh
 npx github:jtc268/not-like-us sync
-curl -fsSL https://notlikeus.adorellc.pro/nlu.mjs -o nlu.mjs && node nlu.mjs sync
+curl -fsSL https://notlikeus.art/nlu.mjs -o nlu.mjs && node nlu.mjs sync
 ```
 
 | Command | What it does |
 | --- | --- |
+| `setup <key>` | Saves the key, installs the current rules, and adds session-start update hooks. |
 | `login <key>` | Saves the key to `~/.config/not-like-us/key` and checks it. |
 | `sync` | Pulls the feed and writes it everywhere below. Without a key, installs the public snapshot. |
 | `sync --project` | Writes `.agents/skills/not-like-us/` and a managed block in the project's `AGENTS.md`. |
@@ -76,7 +77,7 @@ A target is written only when its parent folder exists. The full feed is mirrore
 Hermes installs skills from a URL and re-fetches them on `hermes skills update`:
 
 ```sh
-hermes skills install https://notlikeus.adorellc.pro/v1/k/<key>/SKILL.md
+hermes skills install https://notlikeus.art/v1/k/<key>/SKILL.md
 hermes cron create "0 6 * * *" "Run hermes skills update" --no-agent
 ```
 
@@ -88,7 +89,7 @@ openclaw automations create "0 6 * * *" --name not-like-us --command 'node ~/.co
 
 ## Feed
 
-All routes are on `https://notlikeus.adorellc.pro`. Send the key as `Authorization: Bearer nlu_...`, or put it in the path for tools that only fetch URLs.
+All routes are on `https://notlikeus.art`. Send the key as `Authorization: Bearer nlu_...`, or put it in the path for tools that only fetch URLs.
 
 | Route | Auth | Returns |
 | --- | --- | --- |
@@ -140,6 +141,6 @@ The feed is refreshed in-process once an hour.
 
 ## Operating it
 
-Secrets the site needs are listed in `site/deploy/adore-manifest.json`. `NLU_KEY_SECRET` signs keys; rotating it invalidates every key at once. `NLU_SOURCE_REPO` and `NLU_SOURCE_TOKEN` point at the private repository. Stripe objects: product `Not Like Us Stream`, one monthly price, one billing-portal configuration. No webhook is required; the welcome page derives the key from the checkout session and emails it through Resend from `stream@adorellc.pro`.
+Secrets the site needs are listed in `site/deploy/adore-manifest.json`. `NLU_KEY_SECRET` signs keys; rotating it invalidates every key at once. `NLU_SOURCE_REPO` and `NLU_SOURCE_TOKEN` point at the private repository. Stripe objects: product `Not Like Us Stream`, one monthly price, and one billing-portal configuration. The welcome page fulfills checkout immediately. A private reconciliation job checks completed Stripe sessions every minute, so closing the browser cannot strand a purchase. Resend idempotency prevents duplicate welcome emails.
 
 To publish a change: commit to the private repository. To refresh the public snapshot: copy `manual/`, `skills/`, and `AGENTS.md` from the private repository into this one and commit.

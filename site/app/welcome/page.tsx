@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import CopyBlock from '../../components/copy-block';
-import { checkoutSession, customer, grantDays, makeKey, markGranted, sendKeyEmail, setCustomerMetadata, SITE } from '../../lib/stream';
+import { fulfillCheckout, SITE } from '../../lib/stream';
 
 type Search = Record<string, string | string[] | undefined>;
 
@@ -17,23 +17,7 @@ export default async function Welcome({ searchParams }: { searchParams: Promise<
 
   try {
     if (!sessionId) throw new Error('This page needs the session id that Stripe adds after checkout.');
-    const session = await checkoutSession(sessionId);
-    if (!session.customerId || !session.paid) {
-      throw new Error('Checkout did not complete. If your card was charged, email stream@adorellc.pro with the time of purchase.');
-    }
-    if (session.mode === 'payment' && !session.granted) {
-      const grant = await grantDays(session.customerId, 30 * session.months, { nlu_pass_months: String(session.months) });
-      passUntil = grant.until;
-      if (session.paymentIntentId) await markGranted(session.paymentIntentId, grant.until);
-    }
-    const account = await customer(session.customerId);
-    key = await makeKey(session.customerId, account.keyVersion);
-    email = session.email ?? account.email;
-    emailed = account.welcomeSent;
-    if (!account.welcomeSent && email) {
-      emailed = await sendKeyEmail(email, key);
-      if (emailed) await setCustomerMetadata(session.customerId, { nlu_welcome_sent: new Date().toISOString() });
-    }
+    ({ key, email, emailed, passUntil } = await fulfillCheckout(sessionId, true));
   } catch (caught) {
     error = caught instanceof Error ? caught.message : 'Something failed.';
   }
@@ -69,11 +53,11 @@ export default async function Welcome({ searchParams }: { searchParams: Promise<
           <section className="quick" aria-labelledby="welcome-title">
             <div className="section-label">
               <span>01</span>
-              <h2 id="welcome-title">Your Stream key</h2>
+              <h2 id="welcome-title">Payment complete</h2>
               <p>
-                {emailed && email ? `A copy is in your inbox at ${email}. ` : ''}
+                {emailed && email ? `Your key and setup command are in your inbox at ${email}. ` : ''}
                 {passUntil ? `Your prepaid pass runs until ${passUntil.slice(0, 10)} and does not renew. ` : ''}
-                Keep it private. It is the only login, and it works on every machine you own.
+                The key below opens the current private Stream on every machine you own.
               </p>
             </div>
             <CopyBlock value={key} />
@@ -82,19 +66,31 @@ export default async function Welcome({ searchParams }: { searchParams: Promise<
           <section className="quick" aria-labelledby="setup-title">
             <div className="section-label">
               <span>02</span>
-              <h2 id="setup-title">Set up once</h2>
+              <h2 id="setup-title">Copy one command</h2>
               <p>
-                Node 18 or newer.
+                Open Terminal on Mac, or PowerShell on Windows. Paste the command and press Enter. Node 18 or newer.
               </p>
             </div>
-            <CopyBlock
-              value={`npx github:jtc268/not-like-us login ${key}\nnpx github:jtc268/not-like-us sync\nnpx github:jtc268/not-like-us hook`}
-            />
+            <CopyBlock value={`npx github:jtc268/not-like-us setup ${key}`} />
+          </section>
+
+          <section className="quick" aria-labelledby="done-title">
+            <div className="section-label">
+              <span>03</span>
+              <h2 id="done-title">That is it</h2>
+              <p>The installer finds supported AI tools, writes the current rules, and adds an update check when they start.</p>
+            </div>
+            <div className="doc">
+              <p>
+                Your agents now read the private Stream. New reviewed rules arrive on the next update check. Run{' '}
+                <code>npx github:jtc268/not-like-us status</code> whenever you want to confirm the installed version.
+              </p>
+            </div>
           </section>
 
           <section className="quick" aria-labelledby="direct-title">
             <div className="section-label">
-              <span>03</span>
+              <span>04</span>
               <h2 id="direct-title">Or pull by URL</h2>
               <p>
                 Hermes installs skills from a link and re-fetches them on update.
@@ -105,7 +101,7 @@ export default async function Welcome({ searchParams }: { searchParams: Promise<
 
           <section className="quick" aria-labelledby="mcp-title">
             <div className="section-label">
-              <span>04</span>
+              <span>05</span>
               <h2 id="mcp-title">MCP for any client</h2>
               <p>
                 Live rules over MCP. Setup for each client is on{' '}
@@ -117,7 +113,7 @@ export default async function Welcome({ searchParams }: { searchParams: Promise<
 
           <section className="method" id="manage">
             <div className="section-label">
-              <span>05</span>
+              <span>06</span>
               <h2>Billing</h2>
               <p>Change the card or cancel. Access runs to the end of the paid month.</p>
             </div>

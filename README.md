@@ -12,6 +12,8 @@ This repository is the **snapshot**. It stays where it was the day you took it.
 
 The [**Stream**](https://notlikeus.art/subscribe) is the live edition: $4.99 a month, one key, every machine you own. Tool defaults change every few weeks. The Stream delivers each rule change to Claude Code, Codex, Cursor, OpenClaw, Hermes, Gemini CLI, and Copilot as it lands, so your work keeps looking like yours. It also licenses commercial use. Pay by card, Apple Pay, Google Pay, Link, US bank debit, Amazon Pay, or USDC, as a subscription or a one-time pass for 1 to 12 months. Agents can buy a 30-day pass in USDC over x402 without a human at the keyboard. Details and the feed reference are in [stream/README.md](stream/README.md).
 
+After checkout, the welcome page and email give you a private key and one setup command: `npx github:jtc268/not-like-us setup nlu_your_key`. It installs the current private rules in supported AI tools and checks for updates when they start.
+
 ```sh
 npx github:jtc268/not-like-us sync
 ```

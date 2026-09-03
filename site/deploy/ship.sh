@@ -50,10 +50,12 @@ done
 SOURCE=$(curl -s -m 60 http://127.0.0.1:18080/v1/version | node -e "let s='';process.stdin.on('data',d=>s+=d).on('end',()=>console.log(JSON.parse(s).stream.source))")
 X402=$(curl -s -o /dev/null -w '%{http_code}' -m 30 http://127.0.0.1:18080/v1/x402/pass)
 SUB=$(curl -s -o /dev/null -w '%{http_code}' -m 30 http://127.0.0.1:18080/subscribe)
+JOB_LOCKED=$(curl -s -o /dev/null -w '%{http_code}' -m 30 -X POST http://127.0.0.1:18080/v1/jobs/reconcile)
+JOB_AUTH=$(docker exec nlu-ship-smoke node -e "fetch('http://127.0.0.1:8080/v1/jobs/reconcile',{method:'POST',headers:{authorization:'Bearer '+process.env.NLU_JOB_SECRET}}).then(async r=>{const b=await r.json();console.log(r.status+':'+b.checked+':'+b.failed)})")
 docker rm -f nlu-ship-smoke >/dev/null
-echo "healthz ok, stream source=$SOURCE, x402=$X402, subscribe=$SUB"
+echo "healthz ok, stream source=$SOURCE, x402=$X402, subscribe=$SUB, reconcile locked=$JOB_LOCKED auth=$JOB_AUTH"
 [ "$SOURCE" = stream ] || { echo "stream source is $SOURCE, outbound TLS or source token is broken"; exit 1; }
-[ "$X402" = 402 ] && [ "$SUB" = 200 ] || exit 1
+[ "$X402" = 402 ] && [ "$SUB" = 200 ] && [ "$JOB_LOCKED" = 404 ] && [[ "$JOB_AUTH" == 200:*:0 ]] || exit 1
 
 step "package"
 docker save "$IMAGE" | gzip -1 > "$OUT/image.tar.gz"
@@ -61,7 +63,7 @@ rm -f "$OUT"/image.tar.gz.part-*
 (cd "$OUT" && split -b 20m image.tar.gz image.tar.gz.part- && sha256sum -t image.tar.gz.part-* | sed "s/ */  /" > chunks.sha256)
 ARCHIVE_SHA="sha256:$(sha256sum "$OUT/image.tar.gz" | cut -d' ' -f1)"
 printf '%s\n' "docker build --platform linux/amd64 -t $IMAGE -f site/Containerfile ." "PASS" "image_id=$LOCAL_ID" > "$OUT/build.log"
-printf '%s\n' "validate: PASS" "image test stage (lint, build): PASS" "locked-down smoke: healthz $RELEASE, stream source $SOURCE, x402 $X402, subscribe $SUB" > "$OUT/test.log"
+printf '%s\n' "validate: PASS" "image test stage (lint, build): PASS" "locked-down smoke: healthz $RELEASE, stream source $SOURCE, x402 $X402, subscribe $SUB, reconcile protected and passing" > "$OUT/test.log"
 echo "archive $ARCHIVE_SHA, $(ls "$OUT"/image.tar.gz.part-* | wc -l) chunks"
 
 step "upload to Meadowfire"
