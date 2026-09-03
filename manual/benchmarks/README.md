@@ -1,5 +1,5 @@
-# Benchmark prompts
+# Release benchmark
 
-Run each prompt in a new project with default settings. Record the date, product version, model when visible, output URL or artifact, and the rule IDs observed. Do not compare tools after giving only one of them a local design system.
+The prompt texts and recorded outputs are private Stream research assets. The public repository contains only the method and runner.
 
-These prompts expose convergence. They do not rank overall product quality or detect AI authorship.
+The benchmark studies convergence. It does not rank overall product quality or detect AI authorship.

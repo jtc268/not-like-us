@@ -20,9 +20,7 @@ That command works without a key. It installs the snapshot into every agent on t
 
 ## The release test
 
-Every model release gets the same six prompts with default settings and no system prompt: a beautiful website, an operations app screen, a poem, a price-increase email, homepage copy, a timeout error. What comes back shows what the model reaches for on its own. A judge model drafts findings against the catalog, a person keeps or rejects each one, and the kept ones become rules with the model's name in their scope.
-
-The prompts are in [suite.json](manual/benchmarks/suite.json) and the runner is `node manual/scripts/release-test.mjs --model <id>`. It works with any OpenAI-compatible endpoint and records each run under `manual/benchmarks/runs`.
+Every model release gets the same private test at default settings with no system prompt. A judge model drafts findings against the catalog, a person keeps or rejects each one, and the kept ones become rules with the model's name in their scope.
 
 ## Install the skill
 

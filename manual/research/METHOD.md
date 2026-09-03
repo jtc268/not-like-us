@@ -6,13 +6,13 @@ We collect provider documentation, model guidance, reproducible prompt outputs, 
 
 ## The release test
 
-`manual/benchmarks/suite.json` holds six prompts: two interface builds that return one HTML file and four pieces of writing. Every model release gets all six with default settings and no system prompt, then all six again with the paste block and the universal rules as standing instructions. Six is enough to see a model's habits and cheap enough to run on every release.
+The release benchmark uses a fixed private suite across design and writing. Every model release runs at default settings with no system prompt, then runs again with the Not Like Us rules as standing instructions.
 
-`node manual/scripts/release-test.mjs --model <id>` records both outputs, asks a judge model to name the defaults in the first against the catalog, writes `manual/benchmarks/runs/<date>-<model>/run.json` with the rendered HTML beside it, and regenerates `manual/benchmarks/LEDGER.md`. The runner talks to any OpenAI-compatible endpoint.
+The runner stores its outputs and ledger outside the public repository. It asks a judge model to name the defaults in the first pass against the catalog and retains rendered design output for review.
 
 Judge findings are drafts. A maintainer keeps, rejects, or turns each into a rule with the model in its scope. Only then does it reach the stream, and the run's `reviewed` flag flips.
 
-`manual/benchmarks/baseline-prompts.json` is the older prompt set for manual runs inside product builders such as Lovable and v0, where an API is not the interface.
+The separate manual-builder suite is private too.
 
 ## Rule admission
 

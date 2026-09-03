@@ -1,4 +1,4 @@
-// The release test. Runs manual/benchmarks/suite.json against one model twice,
+// The release test. Runs the private benchmark suite against one model twice,
 // once with no system prompt (the model's defaults) and once with the Not Like
 // Us skill as the system prompt, then asks a judge model to name the defaults
 // in the first output using the rule catalog. Writes one JSON record plus the
@@ -13,9 +13,10 @@
 // lab's models by name, which is the point of the test.
 
 import { mkdir, readdir, readFile, writeFile } from 'node:fs/promises';
+import { homedir } from 'node:os';
+import { join } from 'node:path';
 
 const manual = new URL('..', import.meta.url);
-const repo = new URL('..', manual);
 const args = process.argv.slice(2);
 const option = (name, fallback) => {
   const index = args.indexOf(name);
@@ -32,6 +33,8 @@ const keyEnv = option('--key-env', 'OPENROUTER_API_KEY');
 const judge = option('--judge', model);
 const label = option('--label', model);
 const only = option('--only')?.split(',');
+const benchmarkDir = process.env.NLU_RELEASE_BENCH_DIR?.trim() || join(homedir(), '.config', 'not-like-us', 'benchmarks');
+const suiteFile = process.env.NLU_RELEASE_SUITE?.trim() || join(benchmarkDir, 'suite.json');
 
 async function apiKey() {
   if (process.env[keyEnv]) return process.env[keyEnv].trim();
@@ -39,7 +42,7 @@ async function apiKey() {
 }
 
 const key = await apiKey();
-const suite = JSON.parse(await readFile(new URL('benchmarks/suite.json', manual), 'utf8'));
+const suite = JSON.parse(await readFile(suiteFile, 'utf8'));
 const rules = JSON.parse(await readFile(new URL('data/rules.json', manual), 'utf8'));
 // The guided pass uses what a subscriber's agent actually carries: the paste
 // block and the two universal rule sets, as standing instructions.
@@ -103,7 +106,8 @@ async function observe(prompt, output) {
 const date = new Date().toISOString().slice(0, 10);
 const slug = model.replace(/[^a-z0-9.-]+/gi, '-').toLowerCase();
 const runId = `${date}-${slug}`;
-const runDir = new URL(`benchmarks/runs/${runId}/`, manual);
+const runsDir = join(benchmarkDir, 'runs');
+const runDir = join(runsDir, runId);
 await mkdir(runDir, { recursive: true });
 
 const record = {
@@ -141,8 +145,8 @@ for (const item of suite.prompts) {
   if (item.kind === 'design') {
     const plainHtml = htmlOf(plain.text);
     const guidedHtml = htmlOf(guided.text);
-    if (plainHtml) await writeFile(new URL(`${item.id}.default.html`, runDir), plainHtml);
-    if (guidedHtml) await writeFile(new URL(`${item.id}.with-rules.html`, runDir), guidedHtml);
+    if (plainHtml) await writeFile(join(runDir, `${item.id}.default.html`), plainHtml);
+    if (guidedHtml) await writeFile(join(runDir, `${item.id}.with-rules.html`), guidedHtml);
     entry.html = { default: plainHtml ? `${item.id}.default.html` : null, with_rules: guidedHtml ? `${item.id}.with-rules.html` : null };
   }
   record.prompts.push(entry);
@@ -161,14 +165,13 @@ record.summary = {
   rules_hit: [...hits.entries()].filter(([rule]) => rule !== 'NEW' && rule !== 'UNPARSED').sort((a, b) => b[1] - a[1]).map(([rule, count]) => ({ rule, count })),
   new_tells: record.prompts.flatMap((entry) => entry.observations.filter((observation) => observation.rule === 'NEW').map((observation) => ({ prompt: entry.id, evidence: observation.evidence, note: observation.note }))),
 };
-await writeFile(new URL('run.json', runDir), JSON.stringify(record, null, 2) + '\n');
+await writeFile(join(runDir, 'run.json'), JSON.stringify(record, null, 2) + '\n');
 
 // Ledger: one row per run, newest first.
-const runsDir = new URL('benchmarks/runs/', manual);
 const rows = [];
 for (const name of (await readdir(runsDir)).sort().reverse()) {
   try {
-    const run = JSON.parse(await readFile(new URL(`${name}/run.json`, runsDir), 'utf8'));
+    const run = JSON.parse(await readFile(join(runsDir, name, 'run.json'), 'utf8'));
     const top = run.summary.rules_hit.slice(0, 4).map((hit) => `${hit.rule} (${hit.count})`).join(', ');
     rows.push(`| ${run.date} | ${run.label} | ${run.summary.prompts} | ${run.summary.observations} | ${top || 'none'} | ${run.summary.new_tells.length} | ${run.reviewed ? 'yes' : 'draft'} |`);
   } catch {
@@ -178,13 +181,13 @@ for (const name of (await readdir(runsDir)).sort().reverse()) {
 const ledger = [
   '# Release test ledger',
   '',
-  'One row per model tested with the suite in `suite.json`. Observations are judge-model drafts until a maintainer reviews them; reviewed runs feed the stream.',
+  'One row per model tested with the private suite. Observations are judge-model drafts until a maintainer reviews them; reviewed runs feed the stream.',
   '',
   '| Date | Model | Prompts | Observations | Most common rules | New tells | Reviewed |',
   '| --- | --- | --- | --- | --- | --- | --- |',
   ...rows,
   '',
 ].join('\n');
-await writeFile(new URL('benchmarks/LEDGER.md', manual), ledger);
-console.log(`\nWrote manual/benchmarks/runs/${runId}/run.json and manual/benchmarks/LEDGER.md`);
+await writeFile(join(benchmarkDir, 'LEDGER.md'), ledger);
+console.log(`\nWrote private benchmark run ${runId} and refreshed the private ledger.`);
 console.log(`Summary: ${record.summary.observations} observations across ${record.summary.prompts} prompts; ${record.summary.new_tells.length} new tells to review.`);

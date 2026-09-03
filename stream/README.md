@@ -6,7 +6,7 @@ The public repository is a snapshot. It is free for noncommercial use and it doe
 
 ## Where the rules come from
 
-Every model release gets the six prompts in `manual/benchmarks/suite.json` with default settings and no system prompt. The runner (`node manual/scripts/release-test.mjs --model <id>`) records the outputs, records the same prompts with the rules as standing instructions, and has a judge model draft the defaults it sees against the catalog. A person reviews each finding; kept findings become rules with the model in their scope and ship to the stream. `manual/benchmarks/LEDGER.md` lists every run.
+Every model release gets the same private test at default settings with no system prompt. A judge model drafts the defaults it sees against the catalog. A person reviews each finding, and kept findings become rules with the model in their scope before they ship to the Stream.
 
 ## Paying
 

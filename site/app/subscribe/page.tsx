@@ -1,6 +1,5 @@
 import Link from 'next/link';
 import CopyBlock from '../../components/copy-block';
-import ReleaseLedger from '../../components/release-ledger';
 import StreamStatus from '../../components/stream-status';
 import { PRICE_LABEL, SITE } from '../../lib/stream';
 
@@ -68,8 +67,8 @@ export default async function Stream({ searchParams }: { searchParams: Promise<S
             STREAM
           </h1>
           <p className="deck">
-            A daily release monitor checks major model catalogs. When a new model is callable, it gets the same six
-            tests at default settings with no system prompt. After review, the new rules sync to subscribers&apos; agents
+            A daily release monitor checks major model catalogs. When a new model is callable, it gets the same private
+            test at default settings with no system prompt. After review, the new rules sync to subscribers&apos; agents
             so that model&apos;s defaults do not become their house style.
           </p>
           <StreamStatus />
@@ -92,29 +91,6 @@ export default async function Stream({ searchParams }: { searchParams: Promise<S
             Card, Apple Pay, Google Pay, Link, US bank debit, Amazon Pay, USDC where enabled. Pay once covers 1 to 12 months. Agents pay in USDC over x402.
           </p>
         </aside>
-      </section>
-
-      <section className="quick" id="test" aria-labelledby="test-title">
-        <div className="section-label">
-          <span>01</span>
-          <h2 id="test-title">The test</h2>
-          <p>
-            The monitor checks for new models every day. A newly callable model gets the six prompts below, unchanged,
-            at default settings with no system prompt. A judge model drafts findings against the catalog, then a person
-            approves or rejects each finding before it can ship.
-          </p>
-        </div>
-        <div className="test-body">
-          <ul className="prompt-list">
-            <li>Build a beautiful website</li>
-            <li>Build the first screen of an operations app</li>
-            <li>Write a poem</li>
-            <li>Write the price-increase email</li>
-            <li>Write homepage copy</li>
-            <li>Write a timeout error message</li>
-          </ul>
-          <ReleaseLedger />
-        </div>
       </section>
 
       <section className="quick" aria-labelledby="compare-title">

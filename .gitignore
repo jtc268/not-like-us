@@ -16,3 +16,9 @@ npm-debug.log*
 
 # ship.sh artifacts
 /out/
+
+# proprietary release-test inputs and outputs
+/manual/benchmarks/suite.json
+/manual/benchmarks/baseline-prompts.json
+/manual/benchmarks/runs/
+/manual/benchmarks/LEDGER.md
